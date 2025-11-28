@@ -39,6 +39,13 @@ CREATE TABLE travellers (
     address         address_type
 );
 
+-- -- CONSTRAINTS
+
+ALTER TABLE travellers
+ADD CONSTRAINT pk_travellers
+PRIMARY KEY (traveller_id);
+
+
 
 
 -- -- INSERT example
