@@ -1,7 +1,7 @@
 -- DROP all the table/object
+DROP TABLE hotels;
 DROP TABLE facilities_varray_type;
 DROP TYPE facilities_type;
-DROP TABLE hotels;
 -- CREATE all the table/object
 
 CREATE OR REPLACE TYPE facilities_type AS OBJECT (
