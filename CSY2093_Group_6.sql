@@ -36,7 +36,7 @@ CREATE TABLE travellers (
     firstname       VARCHAR2(40),
     surname         VARCHAR2(40),
     dob             DATE,
-    address         REF OF address_type SCOPE IS addresses
+    address         address_type
 );
 
 
