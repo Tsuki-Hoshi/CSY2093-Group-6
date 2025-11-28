@@ -3,7 +3,6 @@ DROP TABLE facilities_varray_type;
 DROP TYPE facilities_type;
 
 -- CREATE all the table/object
-
 CREATE TABLE hotels (
     hotel_id NUMBER(6),
     name VARCHAR2(40),
@@ -26,10 +25,12 @@ CREATE OR REPLACE TYPE facilities_type AS OBJECT (
 
 CREATE TYPE facilities_varray_type AS VARRAY(100) OF facilities_type;
 /
+
 -- CONSTRAINTS
 ALTER TABLE hotels
 ADD CONSTRAINT pk_hotels
 PRIMARY KEY (hotel_id);
+
 -- INSERT example
 
 
