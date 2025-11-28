@@ -21,7 +21,9 @@ hotel_id NUMBER(6),
 name VARCHAR2(40),
 description VARCHAR2(255),
 start_date DATE,
-end_date DATE);
+end_date DATE,
+activities activity_table_type)
+NESTED TABLE activities STORE AS activity_table;
 
 -- INSERT example
 
