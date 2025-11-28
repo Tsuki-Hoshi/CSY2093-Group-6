@@ -1,4 +1,3 @@
--- Yameen's Work Here
 
 -- -- DROP all the table/object
 
@@ -39,6 +38,9 @@ CREATE TABLE travellers (
     address         address_type
 );
 
+
+
+
 -- -- CONSTRAINTS
 
 ALTER TABLE travellers
@@ -48,11 +50,11 @@ PRIMARY KEY (traveller_id);
 
 
 
--- -- INSERT example
+-- -- INSERTS
 
 
 
--- -- QUERY example
+-- -- QUERIES
 
 
 
