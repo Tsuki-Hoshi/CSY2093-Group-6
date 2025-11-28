@@ -1,13 +1,17 @@
+
 -- -- DROP ALL TABLES / OBJECTS / TYPES
 
 -- RELATIONAL TABLES
+
 DROP TABLE hotels;
 DROP TABLE travellers;
 
 -- OBJECT TABLES
+
 DROP TABLE addresses;
 
 -- OBJECT TYPES
+
 DROP TYPE facilities_varray_type;
 DROP TYPE facilities_type;
 DROP TYPE address_type;
@@ -33,13 +37,14 @@ CREATE OR REPLACE TYPE address_type AS OBJECT (
 );
 /
 
-CREATE TYPE duration_varray_type AS VARRAY(2) OF DATE;
-/
-
 -- VARRAY TYPES
     
 CREATE TYPE facilities_varray_type AS VARRAY(100) OF facilities_type;
 /
+
+CREATE TYPE duration_varray_type AS VARRAY(2) OF DATE;
+/
+
 
 -- OBJECT TABLES
 
@@ -101,5 +106,4 @@ PRIMARY KEY (traveller_id);
 
 
 -- -- QUERIES
-
 
