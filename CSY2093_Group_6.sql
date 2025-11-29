@@ -5,6 +5,8 @@
 
 DROP TABLE hotels;
 DROP TABLE travellers;
+DROP TABLE trip_categories;
+DROP TABLE trips;
 
 -- OBJECT TABLES
 
@@ -15,6 +17,7 @@ DROP TABLE addresses;
 DROP TYPE facilities_varray_type;
 DROP TYPE facilities_type;
 DROP TYPE address_type;
+DROP TYPE duration_varray_type;
 
 -- -- CREATE ALL TYPES / OBJECTS / TABLES
 
