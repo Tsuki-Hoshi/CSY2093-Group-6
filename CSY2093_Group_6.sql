@@ -1,11 +1,25 @@
--- DROP all the table/object
+-- -- DROP ALL TABLES / OBJECTS / TYPES
 
+-- RELATIONAL TABLES
+DROP TABLE trip_categories;
+DROP TABLE trips;
 
+-- OBJECT TABLES
 
--- CREATE all the table/object
+-- OBJECT TYPES
+DROP TYPE duration_varray_type;
+
+-- -- CREATE ALL TYPES / OBJECTS / TABLES
+
+-- TYPES
 CREATE TYPE duration_varray_type AS VARRAY(2) OF DATE;
 /
 
+-- VARRAY TYPES
+
+-- OBJECT TABLES
+
+-- RELATIONAL TABLES
 CREATE TABLE trip_categories(
 trip_category_id NUMBER(6),
 duration duration_varray_type,
@@ -25,10 +39,21 @@ end_date DATE,
 activities activity_table_type)
 NESTED TABLE activities STORE AS activity_table;
 
--- INSERT example
+-- -- CONSTRAINTS
+
+ALTER TABLE trip_categories
+ADD CONSTRAINT pk_trip_categories
+PRIMARY KEY (trip_category_id);
+
+ALTER TABLE trips
+ADD CONSTRAINT pk_trips
+PRIMARY KEY (trip_id);
+
+
+-- -- INSERTS
 
 
 
--- QUERY example
+-- -- QUERIES
 
 
