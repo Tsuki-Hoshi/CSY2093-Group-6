@@ -103,6 +103,14 @@ ALTER TABLE travellers
 ADD CONSTRAINT pk_travellers
 PRIMARY KEY (traveller_id);
 
+ALTER TABLE trip_categories
+ADD CONSTRAINT pk_trip_categories
+PRIMARY KEY (trip_category_id);
+
+ALTER TABLE trips
+ADD CONSTRAINT pk_trips
+PRIMARY KEY (trip_id);
+
 
 -- -- INSERTS
 
