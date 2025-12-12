@@ -28,10 +28,20 @@ CREATE TABLE hotels (
     facilities facilities_varray_type
 );
 
+CREATE TABLE tickets (
+    ticket_id NUMBER(6),
+    trip_id NUMBER(6),
+    traveller_id NUMBER(6),
+    price NUMBER(7,2),
+    name VARCHAR2(40),
+    description VARCHAR2(255)
+);
+
 -- CONSTRAINTS
 ALTER TABLE hotels
 ADD CONSTRAINT pk_hotels
 PRIMARY KEY (hotel_id);
+
 -- INSERT example
 
 
