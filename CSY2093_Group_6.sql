@@ -42,6 +42,41 @@ ALTER TABLE hotels
 ADD CONSTRAINT pk_hotels
 PRIMARY KEY (hotel_id);
 
+ALTER TABLE travellers
+ADD CONSTRAINT pk_travellers
+PRIMARY KEY (traveller_id);
+
+ALTER TABLE trip_categorys
+ADD CONSTRAINT pk_trip_category
+PRIMARY KEY (trip_category_id);
+
+ALTER TABLE trips
+ADD CONSTRAINT pk_trips
+PRIMARY KEY (trip_id);
+
+ALTER TABLE tickets
+ADD CONSTRAINT pk_tickets
+PRIMARY KEY (ticket_id);
+
+ALTER TABLE trips
+ADD CONSTRAINT fk_tr_trip_categories
+FOREIGN KEY (trip_category_id)
+REFERENCES trip_categories (trip_category_id);
+
+ALTER TABLE trips
+ADD CONSTRAINT fk_tr_hotels
+FOREIGN KEY (hotel_id)
+REFERENCES hotels (hotel_id);
+
+ALTER TABLE tickets
+ADD CONSTRAINT fk_ti_trips
+FOREIGN KEY (trip_id)
+REFERENCES trips (trip_id);
+
+ALTER TABLE tickets
+ADD CONSTRAINT fk_ti_travellers
+FOREIGN KEY (traveller_id)
+REFERENCES travellers (traveller_id);
 -- INSERT example
 
 
