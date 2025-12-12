@@ -32,8 +32,8 @@ CREATE TABLE tickets (
     ticket_id NUMBER(6),
     trip_id NUMBER(6),
     traveller_id NUMBER(6),
-    price NUMBER(7,2),
     name VARCHAR2(40),
+    price NUMBER(7,2),
     description VARCHAR2(255)
 );
 
@@ -77,8 +77,23 @@ ALTER TABLE tickets
 ADD CONSTRAINT fk_ti_travellers
 FOREIGN KEY (traveller_id)
 REFERENCES travellers (traveller_id);
+
 -- INSERT example
 
+INSERT INTO tickets (ticket_id, trip_id, traveller_id, name, price, description)
+VALUES (500001, 400000, 100000, 'Child', 200.00, 'This ticket is only valid for customers aged 0-17');
+
+INSERT INTO tickets (ticket_id, trip_id, traveller_id, name, price, description)
+VALUES (500002, 400000, 100001, 'Adult', 500.00, 'This ticket is only valid for customers over the age of 17');
+
+INSERT INTO tickets (ticket_id, trip_id, traveller_id, name, price, description)
+VALUES (500003, 400001, 100002, 'Student', 300.00, 'This ticket is only valid for customers who are currently students');
+
+INSERT INTO tickets (ticket_id, trip_id, traveller_id, name, price, description)
+VALUES (500004, 400001, 100003, 'Disabled', 250.00, 'This ticket is only valid for customers who have disabilities');
+
+INSERT INTO tickets (ticket_id, trip_id, traveller_id, name, price, description)
+VALUES (500004, 400001, 100004, 'Carer', 0, 'This ticket is only valid for customers who care for a person with a disability');
 
 
 -- QUERY example
