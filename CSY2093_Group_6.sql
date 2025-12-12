@@ -93,9 +93,28 @@ INSERT INTO tickets (ticket_id, trip_id, traveller_id, name, price, description)
 VALUES (500004, 400001, 100003, 'Disabled', 250.00, 'This ticket is only valid for customers who have disabilities');
 
 INSERT INTO tickets (ticket_id, trip_id, traveller_id, name, price, description)
-VALUES (500004, 400001, 100004, 'Carer', 0, 'This ticket is only valid for customers who care for a person with a disability');
+VALUES (500004, 400001, 100004, 'Carer', 0.00, 'This ticket is only valid for customers who care for a person with a disability');
 
 
+-- Unsure about dates (Reclarify with Carole)
+INSERT INTO hotels (hotel_id, name, description, rating, contact_no, capacity, addresses, facilities)
+VALUES (300000, 'Park Plaza London Westminster Bridge', 'Modern hotel on Londons South Bank, opposite Big Ben, offering stylish rooms, spa, pool, dining, and easy access to major attractions.', 'B', '03334006112', 2000, 
+(REF(a) FROM addresses a WHERE street = '200 Westminster Bridge Rd'), 
+facility_varray_type(
+    facilities_type('Restaurant', 'On-site dining facility serving breakfast, lunch and dinner', 200, '09:00', '22:00', 0.00),
+    facilities_type('Bar', 'Hotel bar offering drinks and light snacks', 150, '13:00', '23:00', 0.00),
+    facilities_type('Spa', 'Wellness facility offering treatments and relaxation', 50, '09:00', '20:00', 66.00))
+    );
+    
+INSERT INTO hotels (hotel_id, name, description, rating, contact_no, capacity, addresses, facilities)
+VALUES (300001, 'President Hotel', 'President Hotel Camden provides comfortable, affordable accommodation in central London, close to Camden Town and major transport links—ideal for tourists, students, and business travellers.', 'C', '02078378844', 1000, 
+(REF(a) FROM addresses a WHERE street = '56-60 Guilford Street'), 
+facility_varray_type(
+    facilities_type('Restaurant', 'On-site restaurant serving breakfast and evening meals', 200, '07:00', '22:00', 0.00),
+    facilities_type('Bar', 'Hotel bar offering drinks and light snacks', 150, '12:00', '23:00', 0.00),
+    facilities_type('Conference Room', 'Meeting and conference facilities for events and business use', 300, '08:00', '21:00', 0.00),
+    facilities_type('Lounge', 'Guest lounge area for relaxation and informal meetings', 100, '00:00', '23:59', 0.00))
+    );
 -- QUERY example
 
 
