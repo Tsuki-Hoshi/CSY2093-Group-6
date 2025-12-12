@@ -1,17 +1,32 @@
--- DROP all the table/object
-DROP TABLE facilities_varray_type;
-DROP TYPE facilities_type;
 
--- CREATE all the table/object
-CREATE TABLE hotels (
-    hotel_id NUMBER(6),
-    name VARCHAR2(40),
-    description VARCHAR2(255),
-    rating CHAR(1),
-    contact_no VARCHAR2(15),
-    capacity NUMBER(4),
-    addresses REF address_type SCOPE IS addresses
-);
+-- -- DROP ALL TABLES / OBJECTS / TYPES
+
+-- RELATIONAL TABLES
+
+DROP TABLE hotels;
+DROP TABLE travellers;
+DROP TABLE trip_categories;
+DROP TABLE trips;
+
+-- OBJECT TABLES
+
+DROP TABLE addresses;
+
+-- NESTED TABLES
+
+DROP TYPE activity_table_type;
+
+-- OBJECT TYPES
+
+DROP TYPE facilities_varray_type;
+DROP TYPE facilities_type;
+DROP TYPE address_type;
+DROP TYPE duration_varray_type;
+DROP TYPE activity_type;
+
+-- -- CREATE ALL TYPES / OBJECTS / TABLES
+
+-- TYPES
 
 CREATE OR REPLACE TYPE facilities_type AS OBJECT (
     name        VARCHAR2(40),
@@ -23,18 +38,261 @@ CREATE OR REPLACE TYPE facilities_type AS OBJECT (
 );
 /
 
+CREATE OR REPLACE TYPE address_type AS OBJECT (
+    street      VARCHAR2(40),
+    city        VARCHAR2(40),
+    country     VARCHAR2(40)
+);
+/
+
+CREATE OR REPLACE TYPE activity_type AS OBJECT (
+    name            VARCHAR2(40),
+    description     VARCHAR2(255),
+    activity_count  NUMBER(5),
+    duration        NUMBER(5),
+    capacity        NUMBER(5),
+    genre           VARCHAR2(40)
+);
+/
+
+-- VARRAY TYPES
+    
 CREATE TYPE facilities_varray_type AS VARRAY(100) OF facilities_type;
 /
 
--- CONSTRAINTS
+CREATE TYPE duration_varray_type AS VARRAY(2) OF DATE;
+/
+
+
+-- OBJECT TABLES
+
+CREATE TABLE addresses OF address_type;
+
+-- NESTED TABLES
+
+CREATE TYPE activity_table_type AS TABLE OF activity_type;
+/
+
+-- RELATIONAL TABLES
+    
+CREATE TABLE hotels (
+    hotel_id NUMBER(6),
+    name VARCHAR2(40),
+    description VARCHAR2(255),
+    rating CHAR(1),
+    contact_no VARCHAR2(15),
+    capacity NUMBER(4),
+    addresses REF address_type SCOPE IS addresses,
+    facilities facilities_varray_type
+);
+
+CREATE TABLE travellers (
+    traveller_id    NUMBER(6),
+    firstname       VARCHAR2(40),
+    surname         VARCHAR2(40),
+    dob             DATE,
+    address         address_type
+);
+
+                                            -- add username maybe for functions on travellers
+
+CREATE TABLE trip_categories(
+trip_category_id NUMBER(6),
+duration duration_varray_type,
+minimum_age NUMBER(3),
+name VARCHAR2(40),
+description VARCHAR2(255));
+
+CREATE TABLE trips(
+trip_id NUMBER(6),
+trip_category_id NUMBER(6),
+hotel_id NUMBER(6),
+name VARCHAR2(40),
+description VARCHAR2(255),
+start_date DATE,
+end_date DATE,
+activities activity_table_type)
+NESTED TABLE activities STORE AS activity_table;
+
+-- -- CONSTRAINTS
+
+-- PRIMARY KEYS
+
 ALTER TABLE hotels
 ADD CONSTRAINT pk_hotels
 PRIMARY KEY (hotel_id);
 
--- INSERT example
+ALTER TABLE travellers
+ADD CONSTRAINT pk_travellers
+PRIMARY KEY (traveller_id);
+
+ALTER TABLE trip_categories
+ADD CONSTRAINT pk_trip_categories
+PRIMARY KEY (trip_category_id);
+
+ALTER TABLE trips
+ADD CONSTRAINT pk_trips
+PRIMARY KEY (trip_id);
+
+-- FOREIGN KEYS
+
+                                                -- -- VERIFY IF WE NEED TO DROP CONSTRAINTS FOR CAROLE
 
 
+trips 2
+tickets
 
--- QUERY example
+-- -- INSERTS
+
+-- TRAVELLERS
+
+INSERT INTO travellers
+VALUES (100001, 'JUNYO', 'ISHIZAKA ANTARASEN', '31-MAY-2005', address_type('10 FUNKY WAY', 'PHUKET', 'THAILAND'));
+
+INSERT INTO travellers
+VALUES (100002, 'NATNAEL', 'SINTAYEHU', '15-FEB-2006', address_type(' 16 LEAGUE STREET', 'JIMMA', 'ETHIOPIA'));
+
+INSERT INTO travellers
+VALUES (100003, 'SYED YAMEEN', 'MAHDI', '14-MAR-2006', address_type('49 COOL ALLEYWAY', 'SYLHET', 'BANGLADESH'));
+
+INSERT INTO travellers
+VALUES (100004, 'WARREN', 'BROWNE', '24-APR-2003', address_type('4 SILENT ROAD', 'NORTHAMPTON', 'UK'));
+
+INSERT INTO travellers
+VALUES (100005, 'HUGO', 'VEIL', '06-JAN-1800', address_type('13 SERRIN LAND', 'UTOPIA', 'SERITH'));
+
+-- TRIP CATEGORIES
+
+                                                -- -- VERIFY HOW CAN WE ADDED DATE WITHOUT THE YEAR CAROLE
+INSERT INTO trip_categories
+VALUES (
+    200001,
+    duration_varray_type(
+        DATE ('12-DEC-2025'),
+        DATE ('31-DEC-2025')
+    ),
+    10,
+    'CHRISTMAS',
+    'MULTIPLE ACTIVITIES WITH SNOW LIKE SKIING AND BUILDING A SNOWMAN'
+);
+
+INSERT INTO trip_categories
+VALUES (
+    200002,
+    duration_varray_type(
+        DATE('01-JAN-2026'),
+        DATE('10-JAN-2026')
+    ),
+    12,
+    'NEW YEAR',
+    'CELEBRATION EVENTS WITH FIREWORK SHOWS AND STREET FOOD'
+);
+
+INSERT INTO trip_categories
+VALUES (
+    200003,
+    duration_varray_type(
+        DATE('14-FEB-2026'),
+        DATE('20-FEB-2026')
+    ),
+    18,
+    'VALENTINE',
+    'ROMANTIC ACTIVITIES LIKE COUPLE COOKING AND SKY LANTERNS'
+);
+
+INSERT INTO trip_categories
+VALUES (
+    200004,
+    duration_varray_type(
+        DATE('01-APR-2026'),
+        DATE('05-APR-2026')
+    ),
+    10,
+    'SPRING',
+    'FLOWER GARDEN TOURS AND PICNIC ACTIVITIES IN FULL SPRING BLOOM'
+);
+
+INSERT INTO trip_categories
+VALUES (
+    200005,
+    duration_varray_type(
+        DATE('15-JUL-2026'),
+        DATE('25-JUL-2026')
+    ),
+    15,
+    'SUMMER',
+    'BEACH ACTIVITIES LIKE SWIMMING, VOLLEYBALL, AND BOAT RIDES'
+);
+
+-- HOTELS
+
+get data into this
+
+-- TRIPS
+
+INSERT INTO trips
+VALUES (400001, 200001, 300001, 'ALPINE BREAK',
+    'ENJOY OUTDOOR ACTIVITIES',
+    '17-JUN-2025', '25-AUG-2025',
+    activity_table_type(
+        activity_type('MOUNTAIN HIKE', 'GUIDED GROUP HIKE THROUGH SCENIC MOUNTAIN TRAILS', 12, 4, 20, 'OUTDOOR'),
+        activity_type('LAKESIDE PICNIC', 'RELAXING PICNIC BY THE LAKE WITH PROVIDED MEALS', 8, 15, 'CULINARY'),
+        activity_type('ROCK CLIMBING SESSION', 'BEGINNER-FRIENDLY CLIMBING ON NATURAL SURFACES', 3, 3, 12, 'ADVENTURE'))
+);
+
+INSERT INTO trips
+VALUES (400002, 200002, 300002, 'CITY EXPLORER WEEKEND',
+    'ENJOY THE CITY THIS WEEKEND',
+    '10-DEC-2016', '11-DEC-2016',
+    activity_table_type(
+        activity_type('HISTORIC MUSEUM TOUR', 'GUIDED WALK THROUGH MAJOR HISTORICAL MUSEUM HIGHLIGHTS', 5, 2, 30, 'CULTURAL'),
+        activity_type('STREET FOOD WALK', 'VISIT SEVERAL POPULAR FOOD STALLS AND LEARN ABOUT LOCAL CUISINE', 7, 2, 20, 'CULINARY'),
+        activity_type('RIVER CRUISE', 'CALM SIGHTSEEING CRUISE ALONG THE CITY''S RIVER', 1, 1, 50, 'LEISURE'))                                          -- check this
+);
+
+INSERT INTO trips
+VALUES (400003, 200003, 300003, 'DESERT ADVENTURE TOUR',
+    'EXPLORE THE VAST DESERTS',
+    '22-DEC-2025', '28-DEC-2025',
+    activity_table_type(
+        activity_type('SAND DUNE SAFARI', 'OFF-ROAD VEHICLE RIDE ACROSS SAND DUNES', 4, 3, 15, 'ADVENTURE'),
+        activity_type('CAMEL TREK', 'TRADITIONAL CAMEL RIDE ACROSS THE DESERT', 1, 2, 18, 'OUTDOOR'),
+        activity_type('STARGAZING NIGHT CAMP', 'NIGHTTIME DESERT CAMP FOCUSED ON ASTRONOMY AND CONSTELLATIONS', 1, 5, 25, 'EDUCATIONAL'))
+);
+
+INSERT INTO trips
+VALUES (400004, 200004, 300004, 'FESTIVAL AND CULTURE TOUR'
+    'EXPERIENCE THE FESTIVAL AND THE CULTURE OF THE CITY',
+    '29-DEC-2025', '04-JAN-2026',
+    activity_table_type(
+        activity_type('MUSIC FESTIVAL ENTRY', 'FULL-DAY ADMISSION TO MAJOR MUSIC FESTIVAL', 1, 10, 100, 'ENTERTAINMENT'),
+        activity_type('LOCAL CRAFTS WORKSHOP', 'HANDS-ON WORKSHOP MAKING TRADITIONAL CRAFT ITEMS', 4, 2, 20, 'CULTURAL'),
+        activity_type('PHOTOGRAPHY WALK', 'GUIDED PHOTO WALK THROUGH COLOURFUL FESTIVAL AREAS', 6, 3, 25, 'ARTISTIC'))
+);
+
+INSERT INTO trips
+VALUES (400005, 200005, 300005, 'ISLAND RESORT RETREAT',
+    'CHECK OUT THIS SWAGGER ISLAND AND THESE ACTIVITIES',
+    '09-AUG-2027', '15-AUG-2027',
+    activity_table_type(
+        activity_type('SNORKELING TOUR', 'GUIDED SNORKELING SESSION IN SHALLOW CORAL REEFS', 3, 2, 20, 'WATER'),
+        activity_type('BEACH YOGA SESSION', 'MORNING GUIDED YOGA ON THE BEACH', 1, 1, 15, 'WELLNESS'),
+        activity_type('SUNSET BOAT RIDE', 'EVENING BOAT RIDE WITH SCENIC OCEAN VIEWS', 1, 1, 30, 'LEISURE'))
+);
+
+-- TICKETS
+
+GET IN DATA FOR THIS 
+
+-- -- QUERIES
+
+SELECT trip_category_id id, name, minimum_age, tc.duration
+FROM trip_categories tc;
 
 
+/*
+NOTES
+
+EXCEPTION HANDLING
+
+*/
