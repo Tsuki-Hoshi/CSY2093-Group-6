@@ -46,8 +46,8 @@ ALTER TABLE travellers
 ADD CONSTRAINT pk_travellers
 PRIMARY KEY (traveller_id);
 
-ALTER TABLE trip_categorys
-ADD CONSTRAINT pk_trip_category
+ALTER TABLE trip_categories
+ADD CONSTRAINT pk_trip_categories
 PRIMARY KEY (trip_category_id);
 
 ALTER TABLE trips
