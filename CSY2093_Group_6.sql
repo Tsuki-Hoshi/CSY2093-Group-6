@@ -206,6 +206,8 @@ VALUES (
 
 -- -- QUERIES
 
+SELECT trip_category_id id, name, minimum_age, tc.duration
+FROM trip_categories tc;
 
 
 /*
