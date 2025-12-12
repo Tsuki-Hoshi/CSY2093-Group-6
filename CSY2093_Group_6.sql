@@ -162,9 +162,6 @@ REFERENCES travellers (traveller_id);
 
                                                 -- -- VERIFY IF WE NEED TO DROP CONSTRAINTS FOR CAROLE
 
-trips 2
-tickets
-
 -- -- INSERTS
 
 -- TRAVELLERS
