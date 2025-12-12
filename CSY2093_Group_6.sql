@@ -7,6 +7,7 @@ DROP TABLE hotels;
 DROP TABLE travellers;
 DROP TABLE trip_categories;
 DROP TABLE trips;
+DROP TABLE tickets;
 
 -- OBJECT TABLES
 
@@ -113,6 +114,15 @@ start_date DATE,
 end_date DATE,
 activities activity_table_type)
 NESTED TABLE activities STORE AS activity_table;
+
+CREATE TABLE tickets (
+    ticket_id NUMBER(6),
+    trip_id NUMBER(6),
+    traveller_id NUMBER(6),
+    name VARCHAR2(40),
+    price NUMBER(7,2),
+    description VARCHAR2(255)
+);
 
 -- -- CONSTRAINTS
 
@@ -346,7 +356,20 @@ VALUES (400005, 200005, 300005, 'ISLAND RESORT RETREAT',
 
 -- TICKETS
 
-GET IN DATA FOR THIS 
+INSERT INTO tickets (ticket_id, trip_id, traveller_id, name, price, description)
+VALUES (500001, 400000, 100000, 'Child', 200.00, 'This ticket is only valid for customers aged 0-17');
+
+INSERT INTO tickets (ticket_id, trip_id, traveller_id, name, price, description)
+VALUES (500002, 400000, 100001, 'Adult', 500.00, 'This ticket is only valid for customers over the age of 17');
+
+INSERT INTO tickets (ticket_id, trip_id, traveller_id, name, price, description)
+VALUES (500003, 400001, 100002, 'Student', 300.00, 'This ticket is only valid for customers who are currently students');
+
+INSERT INTO tickets (ticket_id, trip_id, traveller_id, name, price, description)
+VALUES (500004, 400001, 100003, 'Disabled', 250.00, 'This ticket is only valid for customers who have disabilities');
+
+INSERT INTO tickets (ticket_id, trip_id, traveller_id, name, price, description)
+VALUES (500004, 400001, 100004, 'Carer', 0.00, 'This ticket is only valid for customers who care for a person with a disability');
 
 -- -- QUERIES
 
