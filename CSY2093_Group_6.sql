@@ -243,7 +243,7 @@ VALUES (400002, 200002, 300002, 'CITY EXPLORER WEEKEND',
     activity_table_type(
         activity_type('HISTORIC MUSEUM TOUR', 'GUIDED WALK THROUGH MAJOR HISTORICAL MUSEUM HIGHLIGHTS', 5, 2, 30, 'CULTURAL'),
         activity_type('STREET FOOD WALK', 'VISIT SEVERAL POPULAR FOOD STALLS AND LEARN ABOUT LOCAL CUISINE', 7, 2, 20, 'CULINARY'),
-        activity_type('RIVER CRUISE', 'CALM SIGHTSEEING CRUISE ALONG THE CITY''S RIVER', 1, 1, 50, 'LEISURE'))                                          -- check this
+        activity_type('RIVER CRUISE', 'CALM SIGHTSEEING CRUISE ALONG THE CITY''S RIVER', 1, 1, 50, 'LEISURE'))                              -- check if the ' work or not
 );
 
 INSERT INTO trips
@@ -275,6 +275,8 @@ VALUES (400005, 200005, 300005, 'ISLAND RESORT RETREAT',
         activity_type('BEACH YOGA SESSION', 'MORNING GUIDED YOGA ON THE BEACH', 1, 1, 15, 'WELLNESS'),
         activity_type('SUNSET BOAT RIDE', 'EVENING BOAT RIDE WITH SCENIC OCEAN VIEWS', 1, 1, 30, 'LEISURE'))
 );
+
+-- TICKETS
 
 
 -- -- QUERIES
