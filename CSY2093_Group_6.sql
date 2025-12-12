@@ -5,19 +5,21 @@
 
 DROP TABLE hotels;
 DROP TABLE travellers;
-DROP TABLE trip_categories;
-DROP TABLE trips;
 
 -- OBJECT TABLES
 
 DROP TABLE addresses;
+
+-- NESTED TABLES
+
+DROP TYPE activity_table_type;
 
 -- OBJECT TYPES
 
 DROP TYPE facilities_varray_type;
 DROP TYPE facilities_type;
 DROP TYPE address_type;
-DROP TYPE duration_varray_type;
+DROP TYPE activity_type;
 
 -- -- CREATE ALL TYPES / OBJECTS / TABLES
 
@@ -40,6 +42,16 @@ CREATE OR REPLACE TYPE address_type AS OBJECT (
 );
 /
 
+CREATE OR REPLACE TYPE activity_type AS OBJECT (
+    name            VARCHAR2(40),
+    description     VARCHAR2(255),
+    activity_count  NUMBER(5),
+    duration        NUMBER(5),
+    capacity        NUMBER(5),
+    genre           VARCHAR2(40)
+);
+/
+
 -- VARRAY TYPES
     
 CREATE TYPE facilities_varray_type AS VARRAY(100) OF facilities_type;
@@ -52,6 +64,11 @@ CREATE TYPE duration_varray_type AS VARRAY(2) OF DATE;
 -- OBJECT TABLES
 
 CREATE TABLE addresses OF address_type;
+
+-- NESTED TABLES
+
+CREATE TYPE activity_table_type AS TABLE OF activity_type;
+/
 
 -- RELATIONAL TABLES
     
@@ -74,6 +91,8 @@ CREATE TABLE travellers (
     address         address_type
 );
 
+                                            -- add username maybe for functions on travellers
+
 CREATE TABLE trip_categories(
 trip_category_id NUMBER(6),
 duration duration_varray_type,
@@ -95,6 +114,8 @@ NESTED TABLE activities STORE AS activity_table;
 
 -- -- CONSTRAINTS
 
+-- PRIMARY KEYS
+
 ALTER TABLE hotels
 ADD CONSTRAINT pk_hotels
 PRIMARY KEY (hotel_id);
@@ -103,18 +124,31 @@ ALTER TABLE travellers
 ADD CONSTRAINT pk_travellers
 PRIMARY KEY (traveller_id);
 
-ALTER TABLE trip_categories
-ADD CONSTRAINT pk_trip_categories
-PRIMARY KEY (trip_category_id);
+-- FOREIGN KEYS
 
-ALTER TABLE trips
-ADD CONSTRAINT pk_trips
-PRIMARY KEY (trip_id);
+                                                -- -- VERIFY IF WE NEED TO DROP CONSTRAINTS FOR CAROLE
 
+
+trips 2
+tickets
 
 -- -- INSERTS
 
 
 
+
+
+
+
+
+
 -- -- QUERIES
 
+
+
+/*
+NOTES
+
+EXCEPTION HANDLING
+
+*/
