@@ -226,7 +226,7 @@ VALUES (
 
 -- HOTELS
 
-
+get data into this
 
 -- TRIPS
 
@@ -282,6 +282,7 @@ VALUES (400005, 200005, 300005, 'ISLAND RESORT RETREAT',
 
 -- TICKETS
 
+GET IN DATA FOR THIS 
 
 -- -- QUERIES
 
