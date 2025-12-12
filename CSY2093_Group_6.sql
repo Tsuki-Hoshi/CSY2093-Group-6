@@ -100,7 +100,6 @@ CREATE TABLE trip_categories(
 trip_category_id NUMBER(6),
 duration duration_varray_type,
 minimum_age NUMBER(3),
-genre VARCHAR2(40),
 name VARCHAR2(40),
 description VARCHAR2(255));
 
@@ -154,7 +153,6 @@ VALUES (
     ),
     18,
     'CHRISTMAS',
-    'SNOWFLAKE',
     'MULTIPLE ACTIVITIES WITH SNOW LIKE SKIING AND BUILDING A SNOWMAN'
 );
 
@@ -167,7 +165,6 @@ VALUES (
     ),
     12,
     'NEW YEAR',
-    'FIREWORK FEST',
     'CELEBRATION EVENTS WITH FIREWORK SHOWS AND STREET FOOD'
 );
 
@@ -180,7 +177,6 @@ VALUES (
     ),
     16,
     'VALENTINE',
-    'HEARTWARM',
     'ROMANTIC ACTIVITIES LIKE COUPLE COOKING AND SKY LANTERNS'
 );
 
@@ -193,7 +189,6 @@ VALUES (
     ),
     10,
     'SPRING',
-    'BLOOMFEST',
     'FLOWER GARDEN TOURS AND PICNIC ACTIVITIES IN FULL SPRING BLOOM'
 );
 
@@ -206,7 +201,6 @@ VALUES (
     ),
     15,
     'SUMMER',
-    'SUNBURST',
     'BEACH ACTIVITIES LIKE SWIMMING, VOLLEYBALL, AND BOAT RIDES'
 );
 
