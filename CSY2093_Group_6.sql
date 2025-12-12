@@ -144,6 +144,7 @@ tickets
 
 -- -- INSERTS
 
+                                                -- -- VERIFY HOW CAN WE ADDED DATE WITHOUT THE YEAR CAROLE
 INSERT INTO trip_categories
 VALUES (
     200001,
