@@ -134,7 +134,7 @@ facilities_varray_type(
     facilities_type('Pool bar', 'Access to beverages while swimming with the family', 100, '10.30','22.30', 0.00)),
 REF(a) FROM addresses a WHERE street= '73 St. Michaels Road';
 
-INSERT INTO hotels (hotel_id, name, rating, contact_no, capacity, addresses, facilities, description)
+INSERT INTO hotels (hotel_id, name, rating, contact_no, capacity, description, facilities, addresses)
 SELECT 300005, 'Premier Hotel', 'A', '073083647183', 1 , 'Single room with shared bathroom with access to Joining rooms',
 facilities_varray_type(
     facilities_type('Room services', 'Workers clean everyones room when they are not in their rooms', 0, '09.00', '08.00', 0.00),
