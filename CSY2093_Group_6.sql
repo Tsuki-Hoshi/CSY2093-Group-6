@@ -125,7 +125,7 @@ facilities_varray_type(
     facilities_type('Pool', 'On-site pool where guests have fun whenever they want', 150, '10:30', '22:30', 0.00),
     facilities_type('Room Service', 'Workers clean everyones room when they are not in their rooms', 0, '09:00','08:00', 0.00),
     facilities_type('Kids club3', 'This is for children only to have fun and do activities', 100, '12:00', '18:00', 0.00)),
-    REF(a) FROM addresses WHERE a.street= '9 Junction Road';
+    REF(a) FROM addresses a WHERE street= '9 Junction Road';
 
 INSERT INTO hotels (hotel_id, name, rating, contact_no, capacity, description, facilities, addresses)
 SELECT 300004, 'Hotel Oak Bridge', 'C', '073890321171', 1, 'Ensuite with a free mini fridge and access to the Bar',
@@ -133,7 +133,7 @@ facilities_varray_type(
     facilities_type('Wifi', 'Access Wifi to keep memories on social media', 50, '00.00', '00.00', 0.00),
     facilities_type('Bar', 'Access to the bar so adults can drink beverages or soft drinks', 50, '05.00', '01.00', 0.00),
     facilities_type('Pool bar', 'Access to beverages while swimming with the family', 100, '10.30','22.30', 0.00)),
-REF(a) FROM addresses WHERE a.street= '73 St. Michaels Road';
+REF(a) FROM addresses a WHERE street= '73 St. Michaels Road';
 
 INSERT INTO hotels (hotel_id, name, rating, contact_no, capacity, addresses, facilities, description)
 SELECT 300005, 'Premier Hotel', 'A', '073083647183', 1 , 'Single room with shared bathroom with access to Joining rooms',
@@ -141,7 +141,7 @@ facilities_varray_type(
     facilities_type('Room services', 'Workers clean everyones room when they are not in their rooms', 0, '09.00', '08.00', 0.00),
     facilities_type('Restraunt', 'Access food and drinks with family and friends', 150, '09.00', '23.30', 0.00),
     facilities_type('Spa', 'Access to a nice spa with your significant other', 120, '12.00','21.30', 0.00)), 
-    REF(a) FROM addresses WHERE a.street='67 St. Michaels Road';
+    REF(a) FROM addresses a WHERE street='67 St. Michaels Road';
 -- QUERY example
 
 
