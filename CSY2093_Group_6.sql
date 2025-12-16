@@ -98,6 +98,7 @@ VALUES (500004, 400001, 100004, 'Carer', 0.00, 'This ticket is only valid for cu
 
 -- Unsure about dates (Reclarify with Carole)
 
+ALTER SESSION SET NLS_DATE_FORMAT = "HH/MI";
 
 INSERT INTO hotels (hotel_id, name, description, rating, contact_no, capacity, facilities, addresses)
 SELECT 300001, 'Park Plaza London Westminster Bridge',
@@ -141,6 +142,8 @@ facilities_varray_type(
     facilities_type('Restraunt', 'Access food and drinks with family and friends', 150, '09.00', '23.30', 0.00),
     facilities_type('Spa', 'Access to a nice spa with your significant other', 120, '12.00','21.30', 0.00)), 
     REF(a) FROM addresses a WHERE street='67 St. Michaels Road';
+
+ALTER SESSION SET NLS_DATE_FORMAT = "DD/MMM/YYYY";
 -- QUERY example
 
 
