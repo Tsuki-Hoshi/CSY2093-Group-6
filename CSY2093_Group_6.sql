@@ -123,7 +123,7 @@ SELECT 300003, 'Plaza Timber', 'B', '07306036151', 2050, 'Ensuite room with free
 facilities_varray_type(
     facilities_type('Pool', 'On-site pool where guests have fun whenever they want', 150, '10:30', '22:30', 0.00),
     facilities_type('Room Service', 'Workers clean everyones room when they are not in their rooms', 0, '09:00','08:00', 0.00),
-    facilities_type('Kids club3', 'This is for children only to have fun and do activities', 100, '12:00', '18:00', 0.00)),
+    facilities_type('Kids club', 'This is for children only to have fun and do activities', 100, '12:00', '18:00', 0.00)),
     REF(a) FROM addresses a WHERE street= '9 Junction Road';
 
 INSERT INTO hotels (hotel_id, name, rating, contact_no, capacity, description, facilities, addresses)
