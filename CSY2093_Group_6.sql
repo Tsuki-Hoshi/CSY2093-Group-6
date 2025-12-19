@@ -397,6 +397,86 @@ VALUES (500005, 400005, 100005, 'Carer', 0.00, 'This ticket is only valid for cu
 SELECT trip_category_id id, name, minimum_age, tc.duration
 FROM trip_categories tc;
 
+-- OBJECT REFERENCED IN TABLES                                                                          --- FIX FIX FIX FIX
+SELECT hotel_id, name, h.addresses.street, h.addresses.city, h.addresses.country
+FROM hotels h;
+
+SELECT hotel_id, name, addresses.street, addresses.city,  addresses.country
+FROM hotels;
+
+-- OBJECT TYPE IN COLUMNS
+COLUMN city FORMAT a15;
+COLUMN country FORMAT a15;
+
+SELECT t.traveller_id, t.firstname, t.address.city CITY, t.address.country COUNTRY
+FROM travellers t;
+
+-- VARRAY
+SELECT hotel_id, h.name, f.name, f.opening_time, f.closing_time, f.entry_price
+FROM hotels h, TABLE(h.facilities) f
+WHERE hotel_id = 300005;
+
+-- QUERYING TABLES WITH NESTED TABLES
+SELECT trip_id, a.name, a.activity_count, a.duration, a.capacity, a.genre
+FROM trips t, TABLE(t.activities) a;
+
+-- QUERYING NESTED TABLES ONLY
+SELECT VALUE(a)
+FROM THE(
+SELECT t.activities
+FROM trips t
+WHERE t.trip_id = 400001) a;
+
+-- UNION, INTERSECT, MINUS
+
+SELECT traveller_id, firstname, surname FROM travellers WHERE dob > '31-MAY-2005'
+UNION
+SELECT traveller_id, firstname, surname FROM travellers WHERE dob > '31-MAY-2003';
+
+SELECT traveller_id, firstname, surname FROM travellers WHERE dob > '31-MAY-2005'
+INTERSECT
+SELECT traveller_id, firstname, surname FROM travellers WHERE dob > '31-MAY-2003';
+
+SELECT traveller_id, firstname, surname FROM travellers WHERE dob > '31-MAY-2005'
+MINUS
+SELECT traveller_id, firstname, surname FROM travellers WHERE dob > '31-MAY-2003';
+
+-- AGGREGATE FUNCTIONS                                                                                   --- FIX FIX FIX FIX 
+
+SELECT COUNT(traveller_id), traveller_id
+FROM travellers
+GROUP BY travellers;
+
+SELECT MIN(price), ticket_id, name
+FROM tickets
+GROUP BY ticket_id, name;
+
+SELECT MAX(end_date), hotel_id, name
+FROM trips
+GROUP BY hotel_id, name;
+
+SELECT SUM(capacity) hotel_id, contact_no
+FROM hotels
+GROUP BY hotel_id, contact_no;
+
+SELECT AVG(price) ticket_id, name
+FROM tickets
+GROUP BY ticket_id, name;
+
+-- LIKE, IN, OR, BETWEEN, ANY, SOME AND ALL
+
+SELECT traveller_id, firstname, surname FROM travellers WHERE surname LIKE 'I%';
+
+SELECT t.traveller_id, t.firstname, t.surname 
+FROM travellers t 
+WHERE t.address.country IN ('UK', 'BANGLADESH', 'ETHIOPIA');
+
+SELECT hotel_id, name, rating, capacity FROM hotels WHERE capacity BETWEEN 1000 AND 3000;
+
+SELECT hotel_id, name, rating FROM hotels WHERE rating < ANY (SELECT rating FROM hotels WHERE rating = 'B');
+
+SELECT hotel_id, name, rating FROM hotels WHERE rating > ALL (SELECT rating FROM hotels WHERE rating = 'B');
+
 -- INNER JOINS : Finding the Ticket Prices for each Traveller and Their Respective Ticket Name, Ordered from Cheapest to most Expensive
 
 COLUMN firstname FORMAT a15;
@@ -419,7 +499,7 @@ LEFT JOIN travellers tr
 
 
 
-
+------------ SUB QUERIES STILL NOT DONE
 
 
 /*
