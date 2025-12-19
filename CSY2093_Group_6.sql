@@ -193,13 +193,14 @@ VALUES (100005, 'HUGO', 'VEIL', '06-JAN-1800', address_type('13 SERRIN LAND', 'U
 
 -- TRIP CATEGORIES
 
-                                                -- -- VERIFY HOW CAN WE ADDED DATE WITHOUT THE YEAR CAROLE
+ALTER SESSION SET NLS_DATE_FORMAT = 'DD/MON';
+
 INSERT INTO trip_categories
 VALUES (
     200001,
     duration_varray_type(
-        DATE ('12-DEC-2025'),
-        DATE ('31-DEC-2025')
+        '12/DEC',
+        '31/DEC'
     ),
     10,
     'CHRISTMAS',
@@ -210,8 +211,8 @@ INSERT INTO trip_categories
 VALUES (
     200002,
     duration_varray_type(
-        DATE('01-JAN-2026'),
-        DATE('10-JAN-2026')
+        '01/JAN',
+        '10/JAN'
     ),
     12,
     'NEW YEAR',
@@ -222,8 +223,8 @@ INSERT INTO trip_categories
 VALUES (
     200003,
     duration_varray_type(
-        DATE('14-FEB-2026'),
-        DATE('20-FEB-2026')
+        '14/FEB',
+        '20/FEB'
     ),
     18,
     'VALENTINE',
@@ -234,8 +235,8 @@ INSERT INTO trip_categories
 VALUES (
     200004,
     duration_varray_type(
-        DATE('01-APR-2026'),
-        DATE('05-APR-2026')
+        '01/APR',
+        '05/APR'
     ),
     10,
     'SPRING',
@@ -246,13 +247,15 @@ INSERT INTO trip_categories
 VALUES (
     200005,
     duration_varray_type(
-        DATE('15-JUL-2026'),
-        DATE('25-JUL-2026')
+        '15/JUL',
+        '25/JUL'
     ),
     15,
     'SUMMER',
     'BEACH ACTIVITIES LIKE SWIMMING, VOLLEYBALL, AND BOAT RIDES'
 );
+
+ALTER SESSION SET NLS_DATE_FORMAT = 'DD/MON/YYYY';
 
 -- HOTELS
 
