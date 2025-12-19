@@ -397,6 +397,16 @@ VALUES (500005, 400005, 100005, 'Carer', 0.00, 'This ticket is only valid for cu
 SELECT trip_category_id id, name, minimum_age, tc.duration
 FROM trip_categories tc;
 
+-- OBJECT QUERIES, JOINS AND SUB-QUERIES
+
+COLUMN firstname FORMAT a15;
+COLUMN TICKET_NAME FORMAT a15;
+
+SELECT tr.traveller_id, tr.firstname, ti.name TICKET_NAME, ti.price
+FROM travellers tr
+INNER JOIN tickets ti
+    ON tr.traveller_id = ti.traveller_id
+ORDER BY ti.price;
 
 /*
 NOTES
@@ -404,4 +414,29 @@ NOTES
 EXCEPTION HANDLING
 
 */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
