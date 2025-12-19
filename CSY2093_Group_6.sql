@@ -178,7 +178,7 @@ INSERT INTO travellers
 VALUES (100001, 'JUNYO', 'ISHIZAKA ANTARASEN', '31/MAY/2005', address_type('10 FUNKY WAY', 'PHUKET', 'THAILAND'));
 
 INSERT INTO travellers
-VALUES (100002, 'NATNAEL', 'SINTAYEHU', '15/FEB/2006', address_type(' 16 LEAGUE STREET', 'JIMMA', 'ETHIOPIA'));
+VALUES (100002, 'NATNAEL', 'SINTAYEHU', '15/FEB/2006', address_type('16 LEAGUE STREET', 'JIMMA', 'ETHIOPIA'));
 
 INSERT INTO travellers
 VALUES (100003, 'SYED YAMEEN', 'MAHDI', '14/MAR/2006', address_type('49 COOL ALLEYWAY', 'SYLHET', 'BANGLADESH'));
@@ -192,12 +192,15 @@ VALUES (100005, 'HUGO', 'VEIL', '06/JAN/1800', address_type('13 SERRIN LAND', 'U
 -- TRIP CATEGORIES
 
                                                 -- -- VERIFY HOW CAN WE ADDED DATE WITHOUT THE YEAR CAROLE
+
+ALTER SESSION SET NLS_DATE_FORMAT = 'DD/MON';
+
 INSERT INTO trip_categories
 VALUES (
     200001,
     duration_varray_type(
-        '12-DEC-2025',
-        '31-DEC-2025'
+        '12/DEC',
+        '31/DEC'
     ),
     10,
     'CHRISTMAS',
@@ -208,8 +211,8 @@ INSERT INTO trip_categories
 VALUES (
     200002,
     duration_varray_type(
-        '01-JAN-2026',
-        '10-JAN-2026'
+        '01/JAN',
+        '10/JAN'
     ),
     12,
     'NEW YEAR',
@@ -220,8 +223,8 @@ INSERT INTO trip_categories
 VALUES (
     200003,
     duration_varray_type(
-        '14-FEB-2026',
-        '20-FEB-2026'
+        '14/FEB',
+        '20/FEB'
     ),
     18,
     'VALENTINE',
@@ -232,8 +235,8 @@ INSERT INTO trip_categories
 VALUES (
     200004,
     duration_varray_type(
-        '01-APR-2026',
-        '05-APR-2026'
+        '01/APR',
+        '05/APR'
     ),
     10,
     'SPRING',
@@ -244,13 +247,15 @@ INSERT INTO trip_categories
 VALUES (
     200005,
     duration_varray_type(
-        '15-JUL-2026',
-        '25-JUL-2026'
+        '15/JUL',
+        '25/JUL'
     ),
     15,
     'SUMMER',
     'BEACH ACTIVITIES LIKE SWIMMING, VOLLEYBALL, AND BOAT RIDES'
 );
+
+ALTER SESSION SET NLS_DATE_FORMAT = 'DD/MON/YYYY';
 
 -- ADDRESSES OBJECT INSERTS
 
@@ -271,6 +276,8 @@ VALUES ('67 St. Michaels Road', 'UTOPIA', 'SERITH');
 
 -- HOTELS
 
+ALTER SESSION SET NLS_DATE_FORMAT = "HH24:MI";
+
 INSERT INTO hotels (hotel_id, name, description, rating, contact_no, capacity, facilities, addresses)
 SELECT 300001, 'Park Plaza London Westminster Bridge',
     'Modern hotel on Londons South Bank, opposite Big Ben, offering stylish rooms, spa, pool, dining, and easy access to major attractions.', 'B', '03334006112', 2000,
@@ -288,31 +295,33 @@ facilities_varray_type(
     facilities_type('Conference Room', 'Meeting and conference facilities for events and business use', 300, '08:00', '21:00', 0.00),
     facilities_type('Lounge', 'Guest lounge area for relaxation and informal meetings', 100, '00:00', '23:59', 0.00)),
     REF(a) FROM addresses a WHERE street = '56-60 Guilford Street';
-    ;
+
 
 INSERT INTO hotels (hotel_id, name, rating, contact_no, capacity, description, facilities, addresses)
 SELECT 300003, 'Plaza Timber', 'B', '07306036151', 2050, 'Ensuite room with free food and access to the Pool bar',
 facilities_varray_type(
     facilities_type('Pool', 'On-site pool where guests have fun whenever they want', 150, '10:30', '22:30', 0.00),
     facilities_type('Room Service', 'Workers clean everyones room when they are not in their rooms', 0, '09:00','08:00', 0.00),
-    facilities_type('Kids club3', 'This is for children only to have fun and do activities', 100, '12:00', '18:00', 0.00)),
+    facilities_type('Kids club', 'This is for children only to have fun and do activities', 100, '12:00', '18:00', 0.00)),
     REF(a) FROM addresses a WHERE street= '9 Junction Road';
 
 INSERT INTO hotels (hotel_id, name, rating, contact_no, capacity, description, facilities, addresses)
 SELECT 300004, 'Hotel Oak Bridge', 'C', '073890321171', 1, 'Ensuite with a free mini fridge and access to the Bar',
 facilities_varray_type(
-    facilities_type('Wifi', 'Access Wifi to keep memories on social media', 50, '00.00', '00.00', 0.00),
-    facilities_type('Bar', 'Access to the bar so adults can drink beverages or soft drinks', 50, '05.00', '01.00', 0.00),
-    facilities_type('Pool bar', 'Access to beverages while swimming with the family', 100, '10.30','22.30', 0.00)),
+    facilities_type('Wifi', 'Access Wifi to keep memories on social media', 50, '00:00', '00:00', 0.00),
+    facilities_type('Bar', 'Access to the bar so adults can drink beverages or soft drinks', 50, '00:00', '01:00', 0.00),
+    facilities_type('Pool bar', 'Access to beverages while swimming with the family', 100, '10:30','22:30', 0.00)),
 REF(a) FROM addresses a WHERE street= '73 St. Michaels Road';
 
 INSERT INTO hotels (hotel_id, name, rating, contact_no, capacity, description, facilities, addresses)
 SELECT 300005, 'Premier Hotel', 'A', '073083647183', 1 , 'Single room with shared bathroom with access to Joining rooms',
 facilities_varray_type(
-    facilities_type('Room services', 'Workers clean everyones room when they are not in their rooms', 0, '09.00', '08.00', 0.00),
-    facilities_type('Restraunt', 'Access food and drinks with family and friends', 150, '09.00', '23.30', 0.00),
-    facilities_type('Spa', 'Access to a nice spa with your significant other', 120, '12.00','21.30', 0.00)), 
+    facilities_type('Room services', 'Workers clean everyones room when they are not in their rooms', 0, '09:00', '08:00', 0.00),
+    facilities_type('Restraunt', 'Access food and drinks with family and friends', 150, '09:00', '23:30', 0.00),
+    facilities_type('Spa', 'Access to a nice spa with your significant other', 120, '12:00','21:30', 0.00)), 
     REF(a) FROM addresses a WHERE street='67 St. Michaels Road';
+
+ALTER SESSION SET NLS_DATE_FORMAT = 'DD/MON/YYYY';
 
 -- TRIPS
 
@@ -369,19 +378,19 @@ VALUES (400005, 200005, 300005, 'ISLAND RESORT RETREAT',
 -- TICKETS
 
 INSERT INTO tickets (ticket_id, trip_id, traveller_id, name, price, description)
-VALUES (500001, 400000, 100000, 'Child', 200.00, 'This ticket is only valid for customers aged 0-17');
+VALUES (500001, 400001, 100001, 'Child', 200.00, 'This ticket is only valid for customers aged 0-17');
 
 INSERT INTO tickets (ticket_id, trip_id, traveller_id, name, price, description)
-VALUES (500002, 400000, 100001, 'Adult', 500.00, 'This ticket is only valid for customers over the age of 17');
+VALUES (500002, 400002, 100002, 'Adult', 500.00, 'This ticket is only valid for customers over the age of 17');
 
 INSERT INTO tickets (ticket_id, trip_id, traveller_id, name, price, description)
-VALUES (500003, 400001, 100002, 'Student', 300.00, 'This ticket is only valid for customers who are currently students');
+VALUES (500003, 400003, 100003, 'Student', 300.00, 'This ticket is only valid for customers who are currently students');
 
 INSERT INTO tickets (ticket_id, trip_id, traveller_id, name, price, description)
-VALUES (500004, 400001, 100003, 'Disabled', 250.00, 'This ticket is only valid for customers who have disabilities');
+VALUES (500004, 400004, 100004, 'Disabled', 250.00, 'This ticket is only valid for customers who have disabilities');
 
 INSERT INTO tickets (ticket_id, trip_id, traveller_id, name, price, description)
-VALUES (500004, 400001, 100004, 'Carer', 0.00, 'This ticket is only valid for customers who care for a person with a disability');
+VALUES (500005, 400005, 100005, 'Carer', 0.00, 'This ticket is only valid for customers who care for a person with a disability');
 
 -- -- QUERIES
 
