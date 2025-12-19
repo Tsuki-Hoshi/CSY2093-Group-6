@@ -143,7 +143,7 @@ facilities_varray_type(
     facilities_type('Spa', 'Access to a nice spa with your significant other', 120, '12:00','21:30', 0.00)), 
     REF(a) FROM addresses a WHERE street='67 St. Michaels Road';
 
-ALTER SESSION SET NLS_DATE_FORMAT = 'DD:MON:YYYY';
+ALTER SESSION SET NLS_DATE_FORMAT = 'DD/MON/YYYY';
 
 -- QUERY example
 
