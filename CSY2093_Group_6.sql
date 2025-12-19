@@ -397,7 +397,7 @@ VALUES (500005, 400005, 100005, 'Carer', 0.00, 'This ticket is only valid for cu
 SELECT trip_category_id id, name, minimum_age, tc.duration
 FROM trip_categories tc;
 
--- OBJECT QUERIES, JOINS AND SUB-QUERIES
+-- INNER JOINS : Finding the Ticket Prices for each Traveller and Their Respective Ticket Name, Ordered from Cheapest to most Expensive
 
 COLUMN firstname FORMAT a15;
 COLUMN TICKET_NAME FORMAT a15;
@@ -408,21 +408,26 @@ INNER JOIN tickets ti
     ON tr.traveller_id = ti.traveller_id
 ORDER BY ti.price;
 
+-- OUTER JOINS : Listing all the Travellers with their respective Ticket Names and Prices 
+
+COLUMN surname FORMAT a20;
+
+SELECT ti.traveller_id, ti.name TICKET_NAME, ti.price, tr.firstname, tr.surname
+FROM tickets ti
+LEFT JOIN travellers tr
+    ON ti.traveller_id = tr.traveller_id;
+
+
+
+
+
+
 /*
 NOTES
 
 EXCEPTION HANDLING
 
 */
-
-
-
-
-
-
-
-
-
 
 
 
