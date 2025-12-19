@@ -146,8 +146,42 @@ facilities_varray_type(
 ALTER SESSION SET NLS_DATE_FORMAT = 'DD/MON/YYYY';
 
 -- UNION, Intersect and Minus
+SELECT traveller_id, firstname, surname FROM travellers WHERE dob > '31-MAY-2005'
+UNION
+SELECT traveller_id, firstname, surname FROM travellers WHERE dob > '31-MAY-2003'
 
+SELECT traveller_id, firstname, surname FROM travellers WHERE dob > '31-MAY-2005'
+INTERSECT
+SELECT traveller_id, firstname, surname FROM travellers WHERE dob > '31-MAY-2003'
 
--- 
+SELECT traveller_id, firstname, surname FROM travellers WHERE dob > '31-MAY-2005'
+MINUS
+SELECT traveller_id, firstname, surname FROM travellers WHERE dob > '31-MAY-2003'
+-- LIKE, IN, OR, BETWEEN, ANY, SOME AND ALL
 
+SELECT traveller_id, firstname, surname FROM travellers WHERE surname LIKE 'I%';
 
+SELECT traveller_id, firstname, surname FROM travellers WHERE address.country IN ('UK', 'BANGLADESH', 'ETHIOPIA');
+
+SELECT hotel_id, name, rating, capacity FROM hotels WHERE capacity BETWEEN 1000 AND 3000;
+
+SELECT hotel_id, name, rating FROM hotels WHERE rating > ANY (SELECT rating FROM hotels WHERE rating = 'B');
+
+SELECT hotel_id, name, rating FROM hotels WHERE rating > ALL (SELECT rating FROM hotels WHERE rating = 'B');
+
+-- Travellers
+
+INSERT INTO travellers
+VALUES (100001, 'JUNYO', 'ISHIZAKA ANTARASEN', '31-MAY-2005', address_type('10 FUNKY WAY', 'PHUKET', 'THAILAND'));
+
+INSERT INTO travellers
+VALUES (100002, 'NATNAEL', 'SINTAYEHU', '15-FEB-2006', address_type(' 16 LEAGUE STREET', 'JIMMA', 'ETHIOPIA'));
+
+INSERT INTO travellers
+VALUES (100003, 'SYED YAMEEN', 'MAHDI', '14-MAR-2006', address_type('49 COOL ALLEYWAY', 'SYLHET', 'BANGLADESH'));
+
+INSERT INTO travellers
+VALUES (100004, 'WARREN', 'BROWNE', '24-APR-2003', address_type('4 SILENT ROAD', 'NORTHAMPTON', 'UK'));
+
+INSERT INTO travellers
+VALUES (100005, 'HUGO', 'VEIL', '06-JAN-1800', address_type('13 SERRIN LAND', 'UTOPIA', 'SERITH'));
