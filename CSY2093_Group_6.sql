@@ -381,16 +381,16 @@ VALUES (500004, 400002, 100005, 'Carer', 0.00, 'This ticket is only valid for cu
 SELECT trip_category_id id, name, minimum_age, tc.duration
 FROM trip_categories tc;
 
-SELECT hotel_id, name, h.addresses.street street, h.addresses.city city, h.addresses.country country
+SELECT hotel_id, h.name, h.addresses.street street, h.addresses.city city, h.addresses.country country
 FROM hotels h;
 
 -- VARRAY
-SELECT hotel_id, name, f.name, f.opening_time, f.closing_time, f.entry_price
+SELECT hotel_id, h.name hotel_name, f.name facility_name, f.opening_time, f.closing_time, f.entry_price
 FROM hotels h, TABLE(h.facilities) f
 WHERE hotel_id = 300005;
 
 -- QUERYING TABLES WITH NESTED TABLES
-SELECT trip_id, a.name, a.activity_count, a.duration, a.capacity, a.genre
+SELECT trip_id, t.name trip_name, a.name activity_name, a.activity_count, a.duration, a.capacity, a.genre
 FROM trips t, TABLE(t.activities) a;
 
 -- QUERYING NESTED TABLES ONLY
