@@ -374,9 +374,31 @@ INSERT INTO tickets (ticket_id, trip_id, traveller_id, name, price, description)
 VALUES (500004, 400002, 100005, 'Carer', 0.00, 'This ticket is only valid for customers who care for a person with a disability');
 
 -- -- QUERIES
+--  THESE ARE NOT FORMAT YET!!!
+
+-- Simple one
 
 SELECT trip_category_id id, name, minimum_age, tc.duration
 FROM trip_categories tc;
+
+SELECT hotel_id, name, h.addresses.street street, h.addresses.city city, h.addresses.country country
+FROM hotels h;
+
+-- VARRAY
+SELECT hotel_id, name, f.name, f.opening_time, f.closing_time, f.entry_price
+FROM hotels h, TABLE(h.facilities) f
+WHERE hotel_id = 300005;
+
+-- QUERYING TABLES WITH NESTED TABLES
+SELECT trip_id, a.name, a.activity_count, a.duration, a.capacity, a.genre
+FROM trips t, TABLE(t.activities) a;
+
+-- QUERYING NESTED TABLES ONLY
+SELECT VALUE(a)
+FROM THE(
+SELECT t.activities
+FROM trips t
+WHERE t.trip_id = 400001) a;
 
 
 /*
