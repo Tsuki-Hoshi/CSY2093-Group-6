@@ -374,10 +374,12 @@ INSERT INTO tickets (ticket_id, trip_id, traveller_id, name, price, description)
 VALUES (500004, 400002, 100005, 'Carer', 0.00, 'This ticket is only valid for customers who care for a person with a disability');
 
 -- -- QUERIES
---  THESE ARE NOT FORMAT YET!!!
+--  THESE ARE NOT FORMAT YET!!! MOST OF THEM LOOK QUITE BAD :(
 
 -- Simple one
 
+-- The duration look really weird(it does not show which is the start/finish), it is perfectly fine for developer but not for user
+-- maybe this problem can be fix with function/procedure part
 SELECT trip_category_id id, name, minimum_age, tc.duration
 FROM trip_categories tc;
 
@@ -385,6 +387,7 @@ SELECT hotel_id, h.name, h.addresses.street street, h.addresses.city city, h.add
 FROM hotels h;
 
 -- VARRAY
+-- THE OPENING/CLOSING TIME IS A DATE INSTEAD OF TIME
 SELECT hotel_id, h.name hotel_name, f.name facility_name, f.opening_time, f.closing_time, f.entry_price
 FROM hotels h, TABLE(h.facilities) f
 WHERE hotel_id = 300005;
