@@ -374,25 +374,48 @@ INSERT INTO tickets (ticket_id, trip_id, traveller_id, name, price, description)
 VALUES (500004, 400002, 100005, 'Carer', 0.00, 'This ticket is only valid for customers who care for a person with a disability');
 
 -- -- QUERIES
---  THESE ARE NOT FORMAT YET!!! MOST OF THEM LOOK QUITE BAD :(
+--  THESE ARE NOT COMPLETELY FORMAT YET!!! MOST OF THEM LOOK QUITE BAD :(
 
 -- Simple one
 
 -- The duration look really weird(it does not show which is the start/finish), it is perfectly fine for developer but not for user
 -- maybe this problem can be fix with function/procedure part
+COLUMN name FORMAT a15;
+COLUMN duration FORMAT a46;
+
 SELECT trip_category_id id, name, minimum_age, tc.duration
 FROM trip_categories tc;
+
+-- OBJECT REFERENCED IN TABLES
+COLUMN name FORMAT a30;
+COLUMN street FORMAT a25;
+COLUMN city FORMAT a15;
+COLUMN country FORMAT a15;
 
 SELECT hotel_id, h.name, h.addresses.street street, h.addresses.city city, h.addresses.country country
 FROM hotels h;
 
+-- OBJECT TYPE IN COLUMNS
+COLUMN firstname FORMAT a15;
+COLUMN city FORMAT a15;
+COLUMN country FORMAT a15;
+
+SELECT t.traveller_id, t.firstname, t.address.city CITY, t.address.country COUNTRY
+FROM travellers t;
+
 -- VARRAY
 -- THE OPENING/CLOSING TIME IS A DATE INSTEAD OF TIME
+-- Formatting doesn't work here for some reason
+COLUMN name FORMAT a10;
+
 SELECT hotel_id, h.name hotel_name, f.name facility_name, f.opening_time, f.closing_time, f.entry_price
 FROM hotels h, TABLE(h.facilities) f
 WHERE hotel_id = 300005;
 
 -- QUERYING TABLES WITH NESTED TABLES
+-- Formatting doesn't work here for some reason
+COLUMN name FORMAT a10;
+
 SELECT trip_id, t.name trip_name, a.name activity_name, a.activity_count, a.duration, a.capacity, a.genre
 FROM trips t, TABLE(t.activities) a;
 
