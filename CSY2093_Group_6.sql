@@ -520,12 +520,15 @@ LEFT JOIN travellers tr
 
 -- SUB-QUERIES : Find the information of Travellers who have a Student Ticket
 
+COLUMN firstname FORMAT a15;
+COLUMN surname FORMAT a7;
+
 SELECT tr.traveller_id, tr.firstname, tr.surname
 FROM travellers tr
 WHERE (tr.traveller_id) IN (
-    SELECT ti.traveller_id, ti.name
+    SELECT ti.traveller_id
     FROM tickets ti
-    WHERE name = 'STUDENTS'
+    WHERE name = 'STUDENT'
 );
 
 /*
