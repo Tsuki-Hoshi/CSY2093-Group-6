@@ -426,6 +426,79 @@ SELECT t.activities
 FROM trips t
 WHERE t.trip_id = 400001) a;
 
+-- UNION, INTERSECT, MINUS
+
+SELECT traveller_id, firstname, surname FROM travellers WHERE dob > '31-MAY-2005'
+UNION
+SELECT traveller_id, firstname, surname FROM travellers WHERE dob > '31-MAY-2003';
+
+SELECT traveller_id, firstname, surname FROM travellers WHERE dob > '31-MAY-2005'
+INTERSECT
+SELECT traveller_id, firstname, surname FROM travellers WHERE dob > '31-MAY-2003';
+
+SELECT traveller_id, firstname, surname FROM travellers WHERE dob > '31-MAY-2005'
+MINUS
+SELECT traveller_id, firstname, surname FROM travellers WHERE dob > '31-MAY-2003';
+
+-- AGGREGATE FUNCTIONS                                                                                   --- FIX FIX FIX FIX 
+
+SELECT COUNT(traveller_id), traveller_id
+FROM travellers
+GROUP BY travellers;
+
+SELECT MIN(price), ticket_id, name
+FROM tickets
+GROUP BY ticket_id, name;
+
+SELECT MAX(end_date), hotel_id, name
+FROM trips
+GROUP BY hotel_id, name;
+
+SELECT SUM(capacity) hotel_id, contact_no
+FROM hotels
+GROUP BY hotel_id, contact_no;
+
+SELECT AVG(price) ticket_id, name
+FROM tickets
+GROUP BY ticket_id, name;
+
+-- LIKE, IN, OR, BETWEEN, ANY, SOME AND ALL
+
+SELECT traveller_id, firstname, surname FROM travellers WHERE surname LIKE 'I%';
+
+SELECT t.traveller_id, t.firstname, t.surname 
+FROM travellers t 
+WHERE t.address.country IN ('UK', 'BANGLADESH', 'ETHIOPIA');
+
+SELECT hotel_id, name, rating, capacity FROM hotels WHERE capacity BETWEEN 1000 AND 3000;
+
+SELECT hotel_id, name, rating FROM hotels WHERE rating < ANY (SELECT rating FROM hotels WHERE rating = 'B');
+
+SELECT hotel_id, name, rating FROM hotels WHERE rating > ALL (SELECT rating FROM hotels WHERE rating = 'B');
+
+-- INNER JOINS : Finding the Ticket Prices for each Traveller and Their Respective Ticket Name, Ordered from Cheapest to most Expensive
+
+COLUMN firstname FORMAT a15;
+COLUMN TICKET_NAME FORMAT a15;
+
+SELECT tr.traveller_id, tr.firstname, ti.name TICKET_NAME, ti.price
+FROM travellers tr
+INNER JOIN tickets ti
+    ON tr.traveller_id = ti.traveller_id
+ORDER BY ti.price;
+
+-- OUTER JOINS : Listing all the Travellers with their respective Ticket Names and Prices 
+
+COLUMN surname FORMAT a20;
+
+SELECT ti.traveller_id, ti.name TICKET_NAME, ti.price, tr.firstname, tr.surname
+FROM tickets ti
+LEFT JOIN travellers tr
+    ON ti.traveller_id = tr.traveller_id;
+
+
+
+------------ SUB QUERIES STILL NOT DONE
 
 /*
 NOTES
