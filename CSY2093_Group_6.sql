@@ -3,11 +3,11 @@
 
 -- RELATIONAL TABLES
 
-DROP TABLE tickets;
-DROP TABLE trips;
 DROP TABLE hotels;
 DROP TABLE travellers;
 DROP TABLE trip_categories;
+DROP TABLE trips;
+DROP TABLE tickets;
 
 -- OBJECT TABLES
 
@@ -25,7 +25,7 @@ DROP TYPE address_type;
 DROP TYPE duration_varray_type;
 DROP TYPE activity_type;
 
-PURGE RECYCLEBIN;
+PURGE RECYCLEBIN;                                                       -- yam added purge recyclebin
 
 -- -- CREATE ALL TYPES / OBJECTS / TABLES
 
@@ -96,7 +96,7 @@ CREATE TABLE travellers (
     dob             DATE,
     address         address_type
 );
-
+                                    -- add username maybe for functions on travellers (subject to remove, this is no longer needed)
 CREATE TABLE trip_categories(
 trip_category_id NUMBER(6),
 duration duration_varray_type,
@@ -169,29 +169,27 @@ ALTER TABLE tickets
 ADD CONSTRAINT fk_ti_travellers
 FOREIGN KEY (traveller_id)
 REFERENCES travellers (traveller_id);
-
+                                                -- -- VERIFY IF WE NEED TO DROP CONSTRAINTS FOR CAROLE (subject to remove, already been answered)
 -- -- INSERTS
 
 -- TRAVELLERS
 
 INSERT INTO travellers
-VALUES (100001, 'JUNYO', 'ISHIZAKA ANTARASEN', '31/MAY/2005', address_type('10 FUNKY WAY', 'PHUKET', 'THAILAND'));
+VALUES (100001, 'JUNYO', 'ISHIZAKA ANTARASEN', '31-MAY-2005', address_type('10 FUNKY WAY', 'PHUKET', 'THAILAND'));
 
 INSERT INTO travellers
-VALUES (100002, 'NATNAEL', 'SINTAYEHU', '15/FEB/2006', address_type('16 LEAGUE STREET', 'JIMMA', 'ETHIOPIA'));
+VALUES (100002, 'NATNAEL', 'SINTAYEHU', '15-FEB-2006', address_type(' 16 LEAGUE STREET', 'JIMMA', 'ETHIOPIA'));
 
 INSERT INTO travellers
-VALUES (100003, 'SYED YAMEEN', 'MAHDI', '14/MAR/2006', address_type('49 COOL ALLEYWAY', 'SYLHET', 'BANGLADESH'));
+VALUES (100003, 'SYED YAMEEN', 'MAHDI', '14-MAR-2006', address_type('49 COOL ALLEYWAY', 'SYLHET', 'BANGLADESH'));
 
 INSERT INTO travellers
-VALUES (100004, 'WARREN', 'BROWNE', '24/APR/2003', address_type('4 SILENT ROAD', 'NORTHAMPTON', 'UK'));
+VALUES (100004, 'WARREN', 'BROWNE', '24-APR-2003', address_type('4 SILENT ROAD', 'NORTHAMPTON', 'UK'));
 
 INSERT INTO travellers
-VALUES (100005, 'HUGO', 'VEIL', '06/JAN/1800', address_type('13 SERRIN LAND', 'UTOPIA', 'SERITH'));
+VALUES (100005, 'HUGO', 'VEIL', '06-JAN-1800', address_type('13 SERRIN LAND', 'UTOPIA', 'SERITH'));
 
 -- TRIP CATEGORIES
-
-                                                -- -- VERIFY HOW CAN WE ADDED DATE WITHOUT THE YEAR CAROLE
 
 ALTER SESSION SET NLS_DATE_FORMAT = 'DD/MON';
 
@@ -255,9 +253,9 @@ VALUES (
     'BEACH ACTIVITIES LIKE SWIMMING, VOLLEYBALL, AND BOAT RIDES'
 );
 
-ALTER SESSION SET NLS_DATE_FORMAT = 'DD/MON/YYYY';
+ALTER SESSION SET NLS_DATE_FORMAT = 'DD/MON/YYYY';           -- (this was missing)
 
--- ADDRESSES OBJECT INSERTS
+-- ADDRESS OBJECT INSERTS                                       (this was missing)
 
 INSERT INTO addresses
 VALUES ('200 Westminster Bridge Rd', 'PHUKET', 'THAILAND');
@@ -328,27 +326,27 @@ ALTER SESSION SET NLS_DATE_FORMAT = 'DD/MON/YYYY';
 INSERT INTO trips
 VALUES (400001, 200001, 300001, 'ALPINE BREAK',
     'ENJOY OUTDOOR ACTIVITIES',
-    '17/JUN/2025', '25/AUG/2025',
+    '17-JUN-2025', '25-AUG-2025',
     activity_table_type(
         activity_type('MOUNTAIN HIKE', 'GUIDED GROUP HIKE THROUGH SCENIC MOUNTAIN TRAILS', 12, 4, 20, 'OUTDOOR'),
-        activity_type('LAKESIDE PICNIC', 'RELAXING PICNIC BY THE LAKE WITH PROVIDED MEALS', 8, 15, 25, 'CULINARY'),
+        activity_type('LAKESIDE PICNIC', 'RELAXING PICNIC BY THE LAKE WITH PROVIDED MEALS', 8, 15, 'CULINARY'),
         activity_type('ROCK CLIMBING SESSION', 'BEGINNER-FRIENDLY CLIMBING ON NATURAL SURFACES', 3, 3, 12, 'ADVENTURE'))
 );
 
 INSERT INTO trips
 VALUES (400002, 200002, 300002, 'CITY EXPLORER WEEKEND',
     'ENJOY THE CITY THIS WEEKEND',
-    '10/DEC/2016', '11/DEC/2016',
+    '10-DEC-2016', '11-DEC-2016',
     activity_table_type(
         activity_type('HISTORIC MUSEUM TOUR', 'GUIDED WALK THROUGH MAJOR HISTORICAL MUSEUM HIGHLIGHTS', 5, 2, 30, 'CULTURAL'),
         activity_type('STREET FOOD WALK', 'VISIT SEVERAL POPULAR FOOD STALLS AND LEARN ABOUT LOCAL CUISINE', 7, 2, 20, 'CULINARY'),
-        activity_type('RIVER CRUISE', 'CALM SIGHTSEEING CRUISE ALONG THE CITY''S RIVER', 1, 1, 50, 'LEISURE'))                                          -- check this ESCAPE VALUEEE
+        activity_type('RIVER CRUISE', 'CALM SIGHTSEEING CRUISE ALONG THE CITY''S RIVER', 1, 1, 50, 'LEISURE'))                              -- check if the ' work or not
 );
 
 INSERT INTO trips
 VALUES (400003, 200003, 300003, 'DESERT ADVENTURE TOUR',
     'EXPLORE THE VAST DESERTS',
-    '22/DEC/2025', '28/DEC/2025',
+    '22-DEC-2025', '28-DEC-2025',
     activity_table_type(
         activity_type('SAND DUNE SAFARI', 'OFF-ROAD VEHICLE RIDE ACROSS SAND DUNES', 4, 3, 15, 'ADVENTURE'),
         activity_type('CAMEL TREK', 'TRADITIONAL CAMEL RIDE ACROSS THE DESERT', 1, 2, 18, 'OUTDOOR'),
@@ -356,9 +354,9 @@ VALUES (400003, 200003, 300003, 'DESERT ADVENTURE TOUR',
 );
 
 INSERT INTO trips
-VALUES (400004, 200004, 300004, 'FESTIVAL AND CULTURE TOUR',
+VALUES (400004, 200004, 300004, 'FESTIVAL AND CULTURE TOUR'
     'EXPERIENCE THE FESTIVAL AND THE CULTURE OF THE CITY',
-    '29/DEC/2025', '04/JAN/2026',
+    '29-DEC-2025', '04-JAN-2026',
     activity_table_type(
         activity_type('MUSIC FESTIVAL ENTRY', 'FULL-DAY ADMISSION TO MAJOR MUSIC FESTIVAL', 1, 10, 100, 'ENTERTAINMENT'),
         activity_type('LOCAL CRAFTS WORKSHOP', 'HANDS-ON WORKSHOP MAKING TRADITIONAL CRAFT ITEMS', 4, 2, 20, 'CULTURAL'),
@@ -368,7 +366,7 @@ VALUES (400004, 200004, 300004, 'FESTIVAL AND CULTURE TOUR',
 INSERT INTO trips
 VALUES (400005, 200005, 300005, 'ISLAND RESORT RETREAT',
     'CHECK OUT THIS SWAGGER ISLAND AND THESE ACTIVITIES',
-    '09/AUG/2027', '15/AUG/2027',
+    '09-AUG-2027', '15-AUG-2027',
     activity_table_type(
         activity_type('SNORKELING TOUR', 'GUIDED SNORKELING SESSION IN SHALLOW CORAL REEFS', 3, 2, 20, 'WATER'),
         activity_type('BEACH YOGA SESSION', 'MORNING GUIDED YOGA ON THE BEACH', 1, 1, 15, 'WELLNESS'),
@@ -381,30 +379,43 @@ INSERT INTO tickets (ticket_id, trip_id, traveller_id, name, price, description)
 VALUES (500001, 400001, 100001, 'Child', 200.00, 'This ticket is only valid for customers aged 0-17');
 
 INSERT INTO tickets (ticket_id, trip_id, traveller_id, name, price, description)
-VALUES (500002, 400002, 100002, 'Adult', 500.00, 'This ticket is only valid for customers over the age of 17');
+VALUES (500002, 400001, 100002, 'Adult', 500.00, 'This ticket is only valid for customers over the age of 17');
 
 INSERT INTO tickets (ticket_id, trip_id, traveller_id, name, price, description)
-VALUES (500003, 400003, 100003, 'Student', 300.00, 'This ticket is only valid for customers who are currently students');
+VALUES (500003, 400002, 100003, 'Student', 300.00, 'This ticket is only valid for customers who are currently students');
 
 INSERT INTO tickets (ticket_id, trip_id, traveller_id, name, price, description)
-VALUES (500004, 400004, 100004, 'Disabled', 250.00, 'This ticket is only valid for customers who have disabilities');
+VALUES (500004, 400002, 100004, 'Disabled', 250.00, 'This ticket is only valid for customers who have disabilities');
 
 INSERT INTO tickets (ticket_id, trip_id, traveller_id, name, price, description)
-VALUES (500005, 400005, 100005, 'Carer', 0.00, 'This ticket is only valid for customers who care for a person with a disability');
+VALUES (500004, 400002, 100005, 'Carer', 0.00, 'This ticket is only valid for customers who care for a person with a disability');
 
--- -- QUERIES
+-- -- QUERIES                   THESE ARE NOT COMPLETELY FORMAT YET!!! MOST OF THEM LOOK QUITE BAD :(
+
+-- Simple one
+
+-- The duration look really weird(it does not show which is the start/finish), it is perfectly fine for developer but not for user
+-- maybe this problem can be fix with function/procedure part
+
+-- (yam comment): i'll see what i can do with it maybe, might take a bit to see if i can work around it
+
+COLUMN name FORMAT a15;
+COLUMN duration FORMAT a46;
 
 SELECT trip_category_id id, name, minimum_age, tc.duration
 FROM trip_categories tc;
 
--- OBJECT REFERENCED IN TABLES                                                                          --- FIX FIX FIX FIX
-SELECT hotel_id, name, h.addresses.street, h.addresses.city, h.addresses.country
+-- OBJECT REFERENCED IN TABLES
+COLUMN name FORMAT a18;                 -- (yam comment): see how the formatting is for this, i think this is more legible
+COLUMN street FORMAT a15;
+COLUMN city FORMAT a15;
+COLUMN country FORMAT a15;
+
+SELECT hotel_id, h.name, h.addresses.street street, h.addresses.city city, h.addresses.country country
 FROM hotels h;
 
-SELECT hotel_id, name, addresses.street, addresses.city,  addresses.country
-FROM hotels;
-
 -- OBJECT TYPE IN COLUMNS
+COLUMN firstname FORMAT a15;
 COLUMN city FORMAT a15;
 COLUMN country FORMAT a15;
 
@@ -412,12 +423,22 @@ SELECT t.traveller_id, t.firstname, t.address.city CITY, t.address.country COUNT
 FROM travellers t;
 
 -- VARRAY
-SELECT hotel_id, h.name, f.name, f.opening_time, f.closing_time, f.entry_price
+-- THE OPENING/CLOSING TIME IS A DATE INSTEAD OF TIME       unresolved - yam dont know dis unfortunately
+-- Formatting doesn't work here for some reason             (yam comment): fixed by using the pseudoname instead of the column name, check if u want
+COLUMN hotel_name FORMAT a15;
+COLUMN facility_name FORMAT a15;
+
+SELECT hotel_id, h.name hotel_name, f.name facility_name, f.opening_time, f.closing_time, f.entry_price
 FROM hotels h, TABLE(h.facilities) f
 WHERE hotel_id = 300005;
 
 -- QUERYING TABLES WITH NESTED TABLES
-SELECT trip_id, a.name, a.activity_count, a.duration, a.capacity, a.genre
+-- Formatting doesn't work here for some reason             (yam comment): fixed formatting; refer to line 427 comment
+COLUMN trip_name FORMAT a11;
+COLUMN activity_name FORMAT a16;
+COLUMN genre FORMAT a13;
+
+SELECT trip_id, t.name trip_name, a.name activity_name, a.activity_count, a.duration D_HOURS, a.genre       -- (yam comment): removed 1 column cuz it had the same info (plus it contradicted and would look bad cuz of inconsistencies :sob:)
 FROM trips t, TABLE(t.activities) a;
 
 -- QUERYING NESTED TABLES ONLY
@@ -501,27 +522,9 @@ LEFT JOIN travellers tr
 
 ------------ SUB QUERIES STILL NOT DONE
 
-
 /*
 NOTES
 
 EXCEPTION HANDLING
 
 */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
