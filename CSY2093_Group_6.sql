@@ -189,7 +189,7 @@ VALUES (100004, 'WARREN', 'BROWNE', '24-APR-2003', address_type('4 SILENT ROAD',
 INSERT INTO travellers
 VALUES (100005, 'HUGO', 'VEIL', '06-JAN-1800', address_type('13 SERRIN LAND', 'UTOPIA', 'SERITH'));
 
--- TRIP CATEGORIES
+-- TRIP CATEGORIES                                                                      --The Date still included the year despite doing what caroll said, ask her again
 
 ALTER SESSION SET NLS_DATE_FORMAT = 'DD/MON';
 
