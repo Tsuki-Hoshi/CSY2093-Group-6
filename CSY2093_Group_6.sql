@@ -464,25 +464,32 @@ SELECT traveller_id, firstname, surname FROM travellers WHERE dob > '31-MAY-2003
 
 -- AGGREGATE FUNCTIONS                                                                                   --- FIX FIX FIX FIX 
 
-SELECT COUNT(traveller_id), traveller_id
-FROM travellers
-GROUP BY travellers;
+SELECT COUNT(traveller_id)
+FROM travellers;
 
-SELECT MIN(price), ticket_id, name
+SELECT name, MIN(price)
 FROM tickets
-GROUP BY ticket_id, name;
+GROUP BY name;
 
-SELECT MAX(end_date), hotel_id, name
+SELECT hotel_id, name, MAX(end_date)
 FROM trips
 GROUP BY hotel_id, name;
 
-SELECT SUM(capacity) hotel_id, contact_no
+SELECT hotel_id, SUM(capacity)
 FROM hotels
-GROUP BY hotel_id, contact_no;
+GROUP BY hotel_id;
 
-SELECT AVG(price) ticket_id, name
+SELECT name, AVG(price)
 FROM tickets
-GROUP BY ticket_id, name;
+GROUP BY name;
+
+SELECT f.name, AVG(f.entry_price)                           -- This part is not finished, I want to discuss this with the group first -Junyo
+FROM hotels h, TABLE(h.facilities) f
+GROUP BY f.name;
+
+SELECT AVG(f.entry_price) AS avg_entry_fee
+FROM hotels h, TABLE(h.facilities) f;
+
 
 -- LIKE, IN, OR, BETWEEN, ANY, SOME AND ALL
 
