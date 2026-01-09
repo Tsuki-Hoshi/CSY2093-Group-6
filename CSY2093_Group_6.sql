@@ -402,7 +402,7 @@ VALUES (500005, 400005, 100005, 'CARER', 0.00, 'THIS TICKET IS ONLY VALID FOR CU
 COLUMN name FORMAT a15;
 COLUMN duration FORMAT a46;
 
-SELECT trip_category_id id, name, minimum_age, duration(1) START_DATE, duration(2) END_DATE
+SELECT trip_category_id, name, minimum_age
 FROM trip_categories;
 
 -- OBJECT REFERENCED IN TABLES
