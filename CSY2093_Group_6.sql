@@ -448,6 +448,16 @@ SELECT t.activities
 FROM trips t
 WHERE t.trip_id = 400001) a;
 
+-- QUERYING VARRAY USING ALIAS AND AGGREGATE FUNCTION
+SELECT tc.trip_category_id,
+       tc.name,
+       tc.minimum_age,
+       MIN(d.COLUMN_VALUE) AS start_date,
+       MAX(d.COLUMN_VALUE) AS end_date
+FROM trip_categories tc
+CROSS JOIN TABLE(tc.duration) d
+GROUP BY tc.trip_category_id, tc.name, tc.minimum_age;
+
 -- UNION, INTERSECT, MINUS
 
 SELECT traveller_id, firstname, surname FROM travellers WHERE dob > '31-MAY-2005'
