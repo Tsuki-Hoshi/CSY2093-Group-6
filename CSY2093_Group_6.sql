@@ -185,3 +185,60 @@ VALUES (100004, 'WARREN', 'BROWNE', '24-APR-2003', address_type('4 SILENT ROAD',
 
 INSERT INTO travellers
 VALUES (100005, 'HUGO', 'VEIL', '06-JAN-1800', address_type('13 SERRIN LAND', 'UTOPIA', 'SERITH'));
+
+-- Loops
+
+DECLARE
+vn_counter NUMBER(3) := 1;
+vc_firstname := 'WARREN';
+vn_length NUMBER(2) := LENGTH(vc_firstname);
+BEGIN
+    LOOP
+        EXIT WHEN vn_counter > vn_length;
+        DBMS_OUTPUT.PUT_LINE(SUBSTR(vc_firstname, vn_counter, 1));
+        vn_counter := vn_counter + 1;
+    END LOOP;
+END;
+/
+
+DECLARE
+vn_counter NUMBER(3) := 1;
+vc_firstname := 'WARREN';
+vc_surname := 'BROWNE';
+vn_length NUMBER(2) := LENGTH(vc_firstname);
+BEGIN
+    vn_length := LENGTH(vc_firstname);
+    vn_counter := 1;
+    WHILE vn_counter < vn_length + 1 LOOP
+        DBMS_OUTPUT.PUT_LINE(SUBSTR(vc_firstname, vn_counter, 1));
+        vn_counter := vn_counter + 1;
+    END LOOP;
+    vn_length := LENGTH(vc_surname);
+    FOR vn_counter IN 1 .. vn_length LOOP
+        DBMS_OUTPUT.PUT_LINE(SUBSTR(vc_surname, vn_counter, 1));
+    END LOOP;
+END;
+/
+
+CREATE OR REPLACE FUNCTION func_calculate_Age(in_date_of_birth DATE)
+RETURN NUMBER IS
+BEGIN
+    return FLOOR(MONTHS_BETWEEN(sysdate, in_date_of_birth)/12);
+END func_calculate_Age;
+/
+
+CREATE OR REPLACE PROCEDURE proc_print_over_age() IS
+    CURSOR cur_travellers IS
+    SELECT traveller_id, firstname, dob
+    FROM travellers;
+    vn_age NUMBER;
+BEGIN
+    FOR rec_cur_travellers IN cur_travellers LOOP
+        v_age := func_calculate_Age(rec_cur_travellers.dob);
+        IF v_age > 18 THEN
+        DBMS_OUTPUT.PUT_LINE(rec_cur_travellers.firstname || ' is ' || v_age || ' years old.');
+        END IF;
+
+    END LOOP;
+END proc_print_over_age;
+/
