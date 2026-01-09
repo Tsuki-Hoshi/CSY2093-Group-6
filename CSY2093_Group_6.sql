@@ -315,7 +315,7 @@ INSERT INTO hotels (hotel_id, name, rating, contact_no, capacity, description, f
 SELECT 300005, 'PREMIER HOTEL', 'A', '073083647183', 1 , 'SINGLE ROOM WITH SHARED BATHROOM WITH ACCESS TO JOINING ROOMS',
 facilities_varray_type(
     facilities_type('ROOM SERVICES', 'WORKERS CLEAN EVERYONE''S ROOM WHEN THEY ARE NOT IN THEIR ROOMS', 0, '09:00', '08:00', 0.00),
-    facilities_type('RESTRAUNT', 'ACCESS FOOD AND DRINKS WITH FAMILY AND FRIENDS', 150, '09:00', '23:30', 0.00),
+    facilities_type('RESTAURANT', 'ACCESS FOOD AND DRINKS WITH FAMILY AND FRIENDS', 150, '09:00', '23:30', 0.00),
     facilities_type('SPA', 'ACCESS TO A NICE SPA WITH YOUR SIGNIFICANT OTHER', 120, '12:00','21:30', 0.00)), 
     REF(a) FROM addresses a WHERE street='67 ST. MICHAELS ROAD';
 
