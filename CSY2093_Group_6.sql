@@ -493,10 +493,6 @@ SELECT name, AVG(price)
 FROM tickets
 GROUP BY name;
 
-SELECT f.name, AVG(f.entry_price)                           -- This part is not finished, I want to discuss this with the group first -Junyo
-FROM hotels h, TABLE(h.facilities) f
-GROUP BY f.name;
-
 SELECT AVG(f.entry_price) AS avg_entry_fee
 FROM hotels h, TABLE(h.facilities) f;
 
