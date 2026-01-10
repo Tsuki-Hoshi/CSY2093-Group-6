@@ -474,26 +474,32 @@ SELECT traveller_id, firstname, surname FROM travellers WHERE dob > '31-MAY-2003
 
 -- AGGREGATE FUNCTIONS                                                                                   --- FIX FIX FIX FIX 
 
+-- This show the amount of travellers
 SELECT COUNT(traveller_id)
 FROM travellers;
 
-SELECT name, MIN(price)
+-- This show the ticket with the lowest price
+SELECT name, price
 FROM tickets
-GROUP BY name;
+WHERE price = (
+    SELECT MIN(price)
+    FROM tickets
+);
 
-SELECT hotel_id, name, MAX(end_date)
+-- This show the date of the trip end date that ends latest
+SELECT hotel_id, name, end_date
 FROM trips
-GROUP BY hotel_id, name;
+WHERE end_date = (
+    SELECT MAX(end_date)
+    FROM trips
+);
 
-SELECT hotel_id, SUM(capacity)
-FROM hotels
-GROUP BY hotel_id;
+-- This show the SUM of the hotel capacity
+SELECT SUM(capacity)
+FROM hotels;
 
-SELECT name, AVG(price)
-FROM tickets
-GROUP BY name;
-
-SELECT AVG(f.entry_price) AS avg_entry_fee
+-- This show the average price of all the facilities
+SELECT AVG(f.entry_price)
 FROM hotels h, TABLE(h.facilities) f;
 
 
