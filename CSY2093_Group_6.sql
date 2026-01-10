@@ -472,7 +472,7 @@ SELECT traveller_id, firstname, surname FROM travellers WHERE dob > '31-MAY-2005
 MINUS
 SELECT traveller_id, firstname, surname FROM travellers WHERE dob > '31-MAY-2003';
 
--- AGGREGATE FUNCTIONS                                                                                   --- FIX FIX FIX FIX 
+-- AGGREGATE FUNCTIONS
 
 -- This show the amount of travellers
 SELECT COUNT(traveller_id)
