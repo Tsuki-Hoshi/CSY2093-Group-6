@@ -234,16 +234,16 @@ CREATE OR REPLACE PROCEDURE proc_update_age_price() IS
 BEGIN
     FOR rec_cur_tickets IN cur_tickets LOOP
     CASE
-        WHEN INSTR(UPPER(rec_cur_tickets.description), 'ADULT') = 1 THEN
-            DBMS_OUTPUT.PUT_LINE('No discount since ADULT ticket');
-        WHEN INSTR(UPPER(rec_cur_tickets.description), 'CHILD') = 1 THEN
-            UPDATE tickets SET price = price * 0.7 WHERE ticket_id = rec_cur_tickets.ticket_id;
-        WHEN INSTR(UPPER(rec_cur_tickets.description), 'CARER') = 1 THEN
+        WHEN INSTR(UPPER(rec_cur_tickets.description), 'CARER') > 0 THEN
             UPDATE tickets SET price = 0 WHERE ticket_id = rec_cur_tickets.ticket_id;
-        WHEN INSTR(UPPER(rec_cur_tickets.description), 'STUDENT') = 1 THEN
+        WHEN INSTR(UPPER(rec_cur_tickets.description), 'CHILD') > 0 THEN
+            UPDATE tickets SET price = price * 0.7 WHERE ticket_id = rec_cur_tickets.ticket_id;
+        WHEN INSTR(UPPER(rec_cur_tickets.description), 'STUDENT') > 0 THEN
             UPDATE tickets SET price = price * 0.8 WHERE ticket_id = rec_cur_tickets.ticket_id;
-        WHEN INSTR(UPPER(rec_cur_tickets.description), 'ELDERLY') = 1 THEN
+        WHEN INSTR(UPPER(rec_cur_tickets.description), 'ELDERLY') > 0 THEN
             UPDATE tickets SET price = price * 0.8 WHERE ticket_id = rec_cur_tickets.ticket_id;
+        WHEN INSTR(UPPER(rec_cur_tickets.description), 'ADULT') > 0 THEN
+            DBMS_OUTPUT.PUT_LINE('No discount since ADULT ticket');
         ELSE
             DBMS_OUTPUT.PUT_LINE('Unknown ticket type!');
     END CASE;
