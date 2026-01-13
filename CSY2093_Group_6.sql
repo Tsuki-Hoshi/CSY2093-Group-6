@@ -1,3 +1,4 @@
+SET SERVEROUTPUT ON
 
 -- -- DROP ALL TABLES / OBJECTS / TYPES
 
@@ -189,14 +190,16 @@ VALUES (100004, 'WARREN', 'BROWNE', '24-APR-2003', address_type('4 SILENT ROAD',
 INSERT INTO travellers
 VALUES (100005, 'HUGO', 'VEIL', '06-JAN-1800', address_type('13 SERRIN LAND', 'UTOPIA', 'SERITH'));
 
--- TRIP CATEGORIES
+-- TRIP CATEGORIES (JUNYO WIP)
+
+ALTER SESSION SET NLS_DATE_FORMAT = 'DD/MON';
 
 INSERT INTO trip_categories
 VALUES (
     200001,
     duration_varray_type(
-        '12-DEC-2000',
-        '31-DEC-2000'
+        '12/DEC',
+        '31/DEC'
     ),
     10,
     'CHRISTMAS',
@@ -207,8 +210,8 @@ INSERT INTO trip_categories
 VALUES (
     200002,
     duration_varray_type(
-        '01-JAN-2000',
-        '10-JAN-2000'
+        '01/JAN',
+        '10/JAN'
     ),
     12,
     'NEW YEAR',
@@ -219,8 +222,8 @@ INSERT INTO trip_categories
 VALUES (
     200003,
     duration_varray_type(
-        '14-FEB-2000',
-        '20-FEB-2000'
+        '14/FEB',
+        '20/FEB'
     ),
     18,
     'VALENTINE',
@@ -231,8 +234,8 @@ INSERT INTO trip_categories
 VALUES (
     200004,
     duration_varray_type(
-        '01-APR-2000',
-        '05-APR-2000'
+        '01/APR',
+        '05/APR'
     ),
     10,
     'SPRING',
@@ -243,13 +246,15 @@ INSERT INTO trip_categories
 VALUES (
     200005,
     duration_varray_type(
-        '15-JUL-2000',
-        '25-JUL-2000'
+        '15/JUL',
+        '25/JUL'
     ),
     15,
     'SUMMER',
     'BEACH ACTIVITIES LIKE SWIMMING, VOLLEYBALL, AND BOAT RIDES'
 );
+
+ALTER SESSION SET NLS_DATE_FORMAT = 'DD/MON/YYYY';
 
 -- ADDRESS OBJECT INSERTS
 
@@ -311,11 +316,11 @@ INSERT INTO hotels (hotel_id, name, rating, contact_no, capacity, description, f
 SELECT 300005, 'PREMIER HOTEL', 'A', '073083647183', 1 , 'SINGLE ROOM WITH SHARED BATHROOM WITH ACCESS TO JOINING ROOMS',
 facilities_varray_type(
     facilities_type('ROOM SERVICES', 'WORKERS CLEAN EVERYONE''S ROOM WHEN THEY ARE NOT IN THEIR ROOMS', 0, '09:00', '08:00', 0.00),
-    facilities_type('RESTRAUNT', 'ACCESS FOOD AND DRINKS WITH FAMILY AND FRIENDS', 150, '09:00', '23:30', 0.00),
+    facilities_type('RESTAURANT', 'ACCESS FOOD AND DRINKS WITH FAMILY AND FRIENDS', 150, '09:00', '23:30', 0.00),
     facilities_type('SPA', 'ACCESS TO A NICE SPA WITH YOUR SIGNIFICANT OTHER', 120, '12:00','21:30', 0.00)), 
     REF(a) FROM addresses a WHERE street='67 ST. MICHAELS ROAD';
 
-ALTER SESSION SET NLS_DATE_FORMAT = 'DD-MON-YYYY';
+ALTER SESSION SET NLS_DATE_FORMAT = 'DD/MON/YYYY';
 
 -- TRIPS
 
@@ -412,13 +417,10 @@ FROM travellers t;
 -- VARRAY
 COLUMN hotel_name FORMAT a15;
 COLUMN facility_name FORMAT a15;
-ALTER SESSION SET NLS_DATE_FORMAT = "HH24:MI";
 
 SELECT hotel_id, h.name hotel_name, f.name facility_name, f.opening_time, f.closing_time, f.entry_price
 FROM hotels h, TABLE(h.facilities) f
 WHERE hotel_id = 300005;
-
-ALTER SESSION SET NLS_DATE_FORMAT = 'DD-MON-YYYY';
 
 -- QUERYING TABLES WITH NESTED TABLES
 COLUMN trip_name FORMAT a11;
@@ -436,20 +438,14 @@ FROM trips t
 WHERE t.trip_id = 400001) a;
 
 -- QUERYING VARRAY USING ALIAS AND AGGREGATE FUNCTION (Querying Simple VArray)
-COLUMN name FORMAT a15;
-COLUMN duration FORMAT a46;
-ALTER SESSION SET NLS_DATE_FORMAT = 'DD/MON';
-
 SELECT tc.trip_category_id,
        tc.name,
        tc.minimum_age,
        MIN(d.COLUMN_VALUE) AS start_date,
        MAX(d.COLUMN_VALUE) AS end_date
 FROM trip_categories tc
-,TABLE(tc.duration) d
+CROSS JOIN TABLE(tc.duration) d
 GROUP BY tc.trip_category_id, tc.name, tc.minimum_age;
-
-ALTER SESSION SET NLS_DATE_FORMAT = 'DD-MON-YYYY';
 
 -- UNION, INTERSECT, MINUS
 
@@ -530,15 +526,80 @@ FROM tickets ti
 LEFT JOIN travellers tr
     ON ti.traveller_id = tr.traveller_id;
 
--- SUB-QUERIES : Find the information of Travellers who have a Student Ticket
+-- SUB-QUERIES : Find the information of Travellers who have a Student Ticket (NEEDS CHANGING SINCE TICKETS NAME IS NOW IN DESCRIPTION, NEW TICKET NAMES ARE DIFFERENT)
 
 SELECT tr.traveller_id, tr.firstname, tr.surname
 FROM travellers tr
 WHERE (tr.traveller_id) IN (
-    SELECT ti.traveller_id, ti.name
+    SELECT ti.traveller_id, ti.description -- Check
     FROM tickets ti
-    WHERE name = 'STUDENTS'
+    WHERE description = 'STUDENT' -- Check
 );
+
+-- -- PL/SQL
+
+DECLARE
+vn_counter NUMBER(3) := 1;
+vc_firstname := 'WARREN';
+vn_length NUMBER(2) := LENGTH(vc_firstname);
+BEGIN
+    LOOP
+        EXIT WHEN vn_counter > vn_length;
+        DBMS_OUTPUT.PUT_LINE(SUBSTR(vc_firstname, vn_counter, 1));
+        vn_counter := vn_counter + 1;
+    END LOOP;
+END;
+/
+
+DECLARE
+vn_counter NUMBER(3) := 1;
+vc_firstname := 'WARREN';
+vc_surname := 'BROWNE';
+vn_length NUMBER(2) := LENGTH(vc_firstname);
+BEGIN
+    vn_length := LENGTH(vc_firstname);
+    vn_counter := 1;
+    WHILE vn_counter < vn_length + 1 LOOP
+        DBMS_OUTPUT.PUT_LINE(SUBSTR(vc_firstname, vn_counter, 1));
+        vn_counter := vn_counter + 1;
+    END LOOP;
+    vn_length := LENGTH(vc_surname);
+    FOR vn_counter IN 1 .. vn_length LOOP
+        DBMS_OUTPUT.PUT_LINE(SUBSTR(vc_surname, vn_counter, 1));
+    END LOOP;
+END;
+/
+
+CREATE OR REPLACE FUNCTION func_calculate_Age(in_date_of_birth DATE)
+RETURN NUMBER IS
+BEGIN
+    return FLOOR(MONTHS_BETWEEN(sysdate, in_date_of_birth)/12);
+END func_calculate_Age;
+/
+
+CREATE OR REPLACE PROCEDURE proc_update_age_price() IS
+    CURSOR cur_tickets IS
+    SELECT ticket_id, description
+    FROM tickets;
+BEGIN
+    FOR rec_cur_tickets IN cur_tickets LOOP
+    CASE
+        WHEN INSTR(UPPER(rec_cur_tickets.description), 'ADULT') = 1 THEN
+            DBMS_OUTPUT.PUT_LINE('No discount since ADULT ticket');
+        WHEN INSTR(UPPER(rec_cur_tickets.description), 'CHILD') = 1 THEN
+            UPDATE tickets SET price = price * 0.7 WHERE ticket_id = rec_cur_tickets.ticket_id;
+        WHEN INSTR(UPPER(rec_cur_tickets.description), 'CARER') = 1 THEN
+            UPDATE tickets SET price = 0 WHERE ticket_id = rec_cur_tickets.ticket_id;
+        WHEN INSTR(UPPER(rec_cur_tickets.description), 'STUDENT') = 1 THEN
+            UPDATE tickets SET price = price * 0.8 WHERE ticket_id = rec_cur_tickets.ticket_id;
+        WHEN INSTR(UPPER(rec_cur_tickets.description), 'ELDERLY') = 1 THEN
+            UPDATE tickets SET price = price * 0.8 WHERE ticket_id = rec_cur_tickets.ticket_id;
+        ELSE
+            DBMS_OUTPUT.PUT_LINE('Unknown ticket type!');
+    END CASE;
+    END LOOP;
+END proc_update_age_price;
+/
 
 /*
 NOTES
