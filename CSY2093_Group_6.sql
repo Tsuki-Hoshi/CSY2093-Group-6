@@ -458,7 +458,7 @@ SELECT tc.trip_category_id,
        MIN(d.COLUMN_VALUE) AS start_date,
        MAX(d.COLUMN_VALUE) AS end_date
 FROM trip_categories tc
-CROSS JOIN TABLE(tc.duration) d
+,TABLE(tc.duration) d
 GROUP BY tc.trip_category_id, tc.name, tc.minimum_age;
 
 ALTER SESSION SET NLS_DATE_FORMAT = 'DD-MON-YYYY';
