@@ -189,16 +189,14 @@ VALUES (100004, 'WARREN', 'BROWNE', '24-APR-2003', address_type('4 SILENT ROAD',
 INSERT INTO travellers
 VALUES (100005, 'HUGO', 'VEIL', '06-JAN-1800', address_type('13 SERRIN LAND', 'UTOPIA', 'SERITH'));
 
--- TRIP CATEGORIES                                                                      --The Date still included the year despite doing what caroll said, ask her again
-
-ALTER SESSION SET NLS_DATE_FORMAT = 'DD/MON';
+-- TRIP CATEGORIES
 
 INSERT INTO trip_categories
 VALUES (
     200001,
     duration_varray_type(
-        '12/DEC',
-        '31/DEC'
+        '12-DEC-2000',
+        '31-DEC-2000'
     ),
     10,
     'CHRISTMAS',
@@ -209,8 +207,8 @@ INSERT INTO trip_categories
 VALUES (
     200002,
     duration_varray_type(
-        '01/JAN',
-        '10/JAN'
+        '01-JAN-2000',
+        '10-JAN-2000'
     ),
     12,
     'NEW YEAR',
@@ -221,8 +219,8 @@ INSERT INTO trip_categories
 VALUES (
     200003,
     duration_varray_type(
-        '14/FEB',
-        '20/FEB'
+        '14-FEB-2000',
+        '20-FEB-2000'
     ),
     18,
     'VALENTINE',
@@ -233,8 +231,8 @@ INSERT INTO trip_categories
 VALUES (
     200004,
     duration_varray_type(
-        '01/APR',
-        '05/APR'
+        '01-APR-2000',
+        '05-APR-2000'
     ),
     10,
     'SPRING',
@@ -245,15 +243,13 @@ INSERT INTO trip_categories
 VALUES (
     200005,
     duration_varray_type(
-        '15/JUL',
-        '25/JUL'
+        '15-JUL-2000',
+        '25-JUL-2000'
     ),
     15,
     'SUMMER',
     'BEACH ACTIVITIES LIKE SWIMMING, VOLLEYBALL, AND BOAT RIDES'
 );
-
-ALTER SESSION SET NLS_DATE_FORMAT = 'DD/MON/YYYY';
 
 -- ADDRESS OBJECT INSERTS
 
@@ -319,7 +315,7 @@ facilities_varray_type(
     facilities_type('SPA', 'ACCESS TO A NICE SPA WITH YOUR SIGNIFICANT OTHER', 120, '12:00','21:30', 0.00)), 
     REF(a) FROM addresses a WHERE street='67 ST. MICHAELS ROAD';
 
-ALTER SESSION SET NLS_DATE_FORMAT = 'DD/MON/YYYY';
+ALTER SESSION SET NLS_DATE_FORMAT = 'DD-MON-YYYY';
 
 -- TRIPS
 
@@ -427,10 +423,13 @@ FROM travellers t;
 -- Formatting doesn't work here for some reason             (yam comment): fixed by using the pseudoname instead of the column name, check if u want
 COLUMN hotel_name FORMAT a15;
 COLUMN facility_name FORMAT a15;
+ALTER SESSION SET NLS_DATE_FORMAT = "HH24:MI";
 
 SELECT hotel_id, h.name hotel_name, f.name facility_name, f.opening_time, f.closing_time, f.entry_price
 FROM hotels h, TABLE(h.facilities) f
 WHERE hotel_id = 300005;
+
+ALTER SESSION SET NLS_DATE_FORMAT = 'DD-MON-YYYY';
 
 -- QUERYING TABLES WITH NESTED TABLES
 -- Formatting doesn't work here for some reason             (yam comment): fixed formatting; refer to line 427 comment
@@ -449,6 +448,10 @@ FROM trips t
 WHERE t.trip_id = 400001) a;
 
 -- QUERYING VARRAY USING ALIAS AND AGGREGATE FUNCTION
+COLUMN name FORMAT a15;
+COLUMN duration FORMAT a46;
+ALTER SESSION SET NLS_DATE_FORMAT = 'DD/MON';
+
 SELECT tc.trip_category_id,
        tc.name,
        tc.minimum_age,
@@ -457,6 +460,8 @@ SELECT tc.trip_category_id,
 FROM trip_categories tc
 CROSS JOIN TABLE(tc.duration) d
 GROUP BY tc.trip_category_id, tc.name, tc.minimum_age;
+
+ALTER SESSION SET NLS_DATE_FORMAT = 'DD-MON-YYYY';
 
 -- UNION, INTERSECT, MINUS
 
