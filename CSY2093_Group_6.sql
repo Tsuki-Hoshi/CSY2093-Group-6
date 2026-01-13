@@ -190,16 +190,14 @@ VALUES (100004, 'WARREN', 'BROWNE', '24-APR-2003', address_type('4 SILENT ROAD',
 INSERT INTO travellers
 VALUES (100005, 'HUGO', 'VEIL', '06-JAN-1800', address_type('13 SERRIN LAND', 'UTOPIA', 'SERITH'));
 
--- TRIP CATEGORIES (JUNYO WIP)
-
-ALTER SESSION SET NLS_DATE_FORMAT = 'DD/MON';
+-- TRIP CATEGORIES
 
 INSERT INTO trip_categories
 VALUES (
     200001,
     duration_varray_type(
-        '12/DEC',
-        '31/DEC'
+        '12-DEC-2000',
+        '31-DEC-2000'
     ),
     10,
     'CHRISTMAS',
@@ -210,8 +208,8 @@ INSERT INTO trip_categories
 VALUES (
     200002,
     duration_varray_type(
-        '01/JAN',
-        '10/JAN'
+        '01-JAN-2000',
+        '10-JAN-2000'
     ),
     12,
     'NEW YEAR',
@@ -222,8 +220,8 @@ INSERT INTO trip_categories
 VALUES (
     200003,
     duration_varray_type(
-        '14/FEB',
-        '20/FEB'
+        '14-FEB-2000',
+        '20-FEB-2000'
     ),
     18,
     'VALENTINE',
@@ -234,8 +232,8 @@ INSERT INTO trip_categories
 VALUES (
     200004,
     duration_varray_type(
-        '01/APR',
-        '05/APR'
+        '01-APR-2000',
+        '05-APR-2000'
     ),
     10,
     'SPRING',
@@ -246,15 +244,13 @@ INSERT INTO trip_categories
 VALUES (
     200005,
     duration_varray_type(
-        '15/JUL',
-        '25/JUL'
+        '15-JUL-2000',
+        '25-JUL-2000'
     ),
     15,
     'SUMMER',
     'BEACH ACTIVITIES LIKE SWIMMING, VOLLEYBALL, AND BOAT RIDES'
 );
-
-ALTER SESSION SET NLS_DATE_FORMAT = 'DD/MON/YYYY';
 
 -- ADDRESS OBJECT INSERTS
 
@@ -320,7 +316,7 @@ facilities_varray_type(
     facilities_type('SPA', 'ACCESS TO A NICE SPA WITH YOUR SIGNIFICANT OTHER', 120, '12:00','21:30', 0.00)), 
     REF(a) FROM addresses a WHERE street='67 ST. MICHAELS ROAD';
 
-ALTER SESSION SET NLS_DATE_FORMAT = 'DD/MON/YYYY';
+ALTER SESSION SET NLS_DATE_FORMAT = 'DD-MON-YYYY';
 
 -- TRIPS
 
@@ -341,7 +337,7 @@ VALUES (400002, 200002, 300002, 'CITY EXPLORER WEEKEND',
     activity_table_type(
         activity_type('HISTORIC MUSEUM TOUR', 'GUIDED WALK THROUGH MAJOR HISTORICAL MUSEUM HIGHLIGHTS', 5, 2, 30, 'CULTURAL'),
         activity_type('STREET FOOD WALK', 'VISIT SEVERAL POPULAR FOOD STALLS AND LEARN ABOUT LOCAL CUISINE', 7, 2, 20, 'CULINARY'),
-        activity_type('RIVER CRUISE', 'CALM SIGHTSEEING CRUISE ALONG THE CITY''S RIVER', 1, 1, 50, 'LEISURE'))                              -- check if the ' work or not
+        activity_type('RIVER CRUISE', 'CALM SIGHTSEEING CRUISE ALONG THE CITY''S RIVER', 1, 1, 50, 'LEISURE'))
 );
 
 INSERT INTO trips
@@ -417,10 +413,13 @@ FROM travellers t;
 -- VARRAY
 COLUMN hotel_name FORMAT a15;
 COLUMN facility_name FORMAT a15;
+ALTER SESSION SET NLS_DATE_FORMAT = "HH24:MI";
 
 SELECT hotel_id, h.name hotel_name, f.name facility_name, f.opening_time, f.closing_time, f.entry_price
 FROM hotels h, TABLE(h.facilities) f
 WHERE hotel_id = 300005;
+
+ALTER SESSION SET NLS_DATE_FORMAT = 'DD-MON-YYYY';
 
 -- QUERYING TABLES WITH NESTED TABLES
 COLUMN trip_name FORMAT a11;
@@ -438,14 +437,17 @@ FROM trips t
 WHERE t.trip_id = 400001) a;
 
 -- QUERYING VARRAY USING ALIAS AND AGGREGATE FUNCTION (Querying Simple VArray)
-SELECT tc.trip_category_id,
-       tc.name,
-       tc.minimum_age,
+COLUMN name FORMAT a15;
+COLUMN duration FORMAT a46;
+ALTER SESSION SET NLS_DATE_FORMAT = 'DD/MON';
+
+SELECT tc.trip_category_id, tc.name, tc.minimum_age,
        MIN(d.COLUMN_VALUE) AS start_date,
        MAX(d.COLUMN_VALUE) AS end_date
-FROM trip_categories tc
-CROSS JOIN TABLE(tc.duration) d
+FROM trip_categories tc, TABLE(tc.duration) d
 GROUP BY tc.trip_category_id, tc.name, tc.minimum_age;
+
+ALTER SESSION SET NLS_DATE_FORMAT = 'DD-MON-YYYY';
 
 -- UNION, INTERSECT, MINUS
 
