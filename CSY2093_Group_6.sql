@@ -227,18 +227,26 @@ BEGIN
 END func_calculate_Age;
 /
 
-CREATE OR REPLACE PROCEDURE proc_print_over_age() IS
-    CURSOR cur_travellers IS
-    SELECT traveller_id, firstname, dob
-    FROM travellers;
-    vn_age NUMBER;
+CREATE OR REPLACE PROCEDURE proc_update_age_price() IS
+    CURSOR cur_tickets IS
+    SELECT ticket_id, description
+    FROM tickets;
 BEGIN
-    FOR rec_cur_travellers IN cur_travellers LOOP
-        v_age := func_calculate_Age(rec_cur_travellers.dob);
-        IF v_age > 18 THEN
-        DBMS_OUTPUT.PUT_LINE(rec_cur_travellers.firstname || ' is ' || v_age || ' years old.');
-        END IF;
-
+    FOR rec_cur_tickets IN cur_tickets LOOP
+    CASE
+        WHEN INSTR(UPPER(rec_cur_tickets.description), 'ADULT') = 1 THEN
+            DBMS_OUTPUT.PUT_LINE('No discount since ADULT ticket');
+        WHEN INSTR(UPPER(rec_cur_tickets.description), 'CHILD') = 1 THEN
+            UPDATE tickets SET price = price * 0.7 WHERE ticket_id = rec_cur_tickets.ticket_id;
+        WHEN INSTR(UPPER(rec_cur_tickets.description), 'CARER') = 1 THEN
+            UPDATE tickets SET price = 0 WHERE ticket_id = rec_cur_tickets.ticket_id;
+        WHEN INSTR(UPPER(rec_cur_tickets.description), 'STUDENT') = 1 THEN
+            UPDATE tickets SET price = price * 0.8 WHERE ticket_id = rec_cur_tickets.ticket_id;
+        WHEN INSTR(UPPER(rec_cur_tickets.description), 'ELDERLY') = 1 THEN
+            UPDATE tickets SET price = price * 0.8 WHERE ticket_id = rec_cur_tickets.ticket_id;
+        ELSE
+            DBMS_OUTPUT.PUT_LINE('Unknown ticket type!');
+    END CASE;
     END LOOP;
-END proc_print_over_age;
+END proc_update_age_price;
 /
