@@ -243,7 +243,7 @@ BEGIN
         WHEN INSTR(UPPER(rec_cur_tickets.description), 'ELDERLY') > 0 THEN
             UPDATE tickets SET price = price * 0.8 WHERE ticket_id = rec_cur_tickets.ticket_id;
         WHEN INSTR(UPPER(rec_cur_tickets.description), 'ADULT') > 0 THEN
-            DBMS_OUTPUT.PUT_LINE('No discount since ADULT ticket');
+            DBMS_OUTPUT.PUT_LINE('Ticket ID ' || rec_cur_tickets.ticket_id || ' | No discount since ADULT ticket');
         ELSE
             DBMS_OUTPUT.PUT_LINE('Unknown ticket type!');
     END CASE;
