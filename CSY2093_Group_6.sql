@@ -329,7 +329,7 @@ VALUES (400001, 200001, 300001, 'ALPINE BREAK',
     '17-JUN-2025', '25-AUG-2025',
     activity_table_type(
         activity_type('MOUNTAIN HIKE', 'GUIDED GROUP HIKE THROUGH SCENIC MOUNTAIN TRAILS', 12, 4, 20, 'OUTDOOR'),
-        activity_type('LAKESIDE PICNIC', 'RELAXING PICNIC BY THE LAKE WITH PROVIDED MEALS', 8, 15, 30, 'CULINARY'),
+        activity_type('LAKESIDE PICNIC', 'RELAXING PICNIC BY THE LAKE WITH PROVIDED MEALS', 20, 8, 15, 'CULINARY'),
         activity_type('ROCK CLIMBING SESSION', 'BEGINNER-FRIENDLY CLIMBING ON NATURAL SURFACES', 3, 3, 12, 'ADVENTURE'))
 );
 
@@ -379,34 +379,25 @@ INSERT INTO tickets (ticket_id, trip_id, traveller_id, name, price, description)
 VALUES (500001, 400001, 100001, 'CHILD', 200.00, 'THIS TICKET IS ONLY VALID FOR CUSTOMERS AGED 0-17');
 
 INSERT INTO tickets (ticket_id, trip_id, traveller_id, name, price, description)
-VALUES (500002, 400002, 100002, 'ADULT', 500.00, 'THIS TICKET IS ONLY VALID FOR CUSTOMERS OVER THE AGE OF 17');
+VALUES (500002, 400001, 100002, 'ADULT', 500.00, 'THIS TICKET IS ONLY VALID FOR CUSTOMERS OVER THE AGE OF 17');
 
 INSERT INTO tickets (ticket_id, trip_id, traveller_id, name, price, description)
-VALUES (500003, 400003, 100003, 'STUDENT', 300.00, 'THIS TICKET IS ONLY VALID FOR CUSTOMERS WHO ARE CURRENTLY STUDENTS');
+VALUES (500003, 400002, 100003, 'STUDENT', 300.00, 'THIS TICKET IS ONLY VALID FOR CUSTOMERS WHO ARE CURRENTLY STUDENTS');
 
 INSERT INTO tickets (ticket_id, trip_id, traveller_id, name, price, description)
-VALUES (500004, 400004, 100004, 'DISABLED', 250.00, 'THIS TICKET IS ONLY VALID FOR CUSTOMERS WHO HAVE DISABILITIES');
+VALUES (500004, 400002, 100004, 'DISABLED', 250.00, 'THIS TICKET IS ONLY VALID FOR CUSTOMERS WHO HAVE DISABILITIES');
 
 INSERT INTO tickets (ticket_id, trip_id, traveller_id, name, price, description)
-VALUES (500005, 400005, 100005, 'CARER', 0.00, 'THIS TICKET IS ONLY VALID FOR CUSTOMERS WHO CARE FOR A PERSON WITH A DISABILITY');
+VALUES (500005, 400002, 100005, 'CARER', 0.00, 'THIS TICKET IS ONLY VALID FOR CUSTOMERS WHO CARE FOR A PERSON WITH A DISABILITY');
 
--- -- QUERIES                   THESE ARE NOT COMPLETELY FORMAT YET!!! MOST OF THEM LOOK QUITE BAD :(
+-- -- QUERIES
 
--- Simple one
-
--- The duration look really weird(it does not show which is the start/finish), it is perfectly fine for developer but not for user
--- maybe this problem can be fix with function/procedure part
-
--- (yam comment):                       ASK CAROLE ABOUT THIS 'HOW TO QUERY SIMPLE VARRAYS AND DISPLAY THE INFORMATION IN A NICELY FORMATTED WAY'
-
-COLUMN name FORMAT a15;
-COLUMN duration FORMAT a46;
-
-SELECT trip_category_id id, name, minimum_age, duration(1) START_DATE, duration(2) END_DATE
+-- Simple Query
+SELECT trip_category_id, name, minimum_age
 FROM trip_categories;
 
 -- OBJECT REFERENCED IN TABLES
-COLUMN name FORMAT a18;                 -- (yam comment): see how the formatting is for this, i think this is more legible
+COLUMN name FORMAT a18;
 COLUMN street FORMAT a15;
 COLUMN city FORMAT a15;
 COLUMN country FORMAT a15;
@@ -464,25 +455,30 @@ SELECT traveller_id, firstname, surname FROM travellers WHERE dob > '31-MAY-2003
 
 -- AGGREGATE FUNCTIONS                                                                                   --- FIX FIX FIX FIX 
 
-SELECT COUNT(traveller_id), traveller_id
-FROM travellers
-GROUP BY travellers;
+SELECT COUNT(traveller_id)
+FROM travellers;
 
-SELECT MIN(price), ticket_id, name
+SELECT name, price                                              -- Ask Carole about this one
 FROM tickets
-GROUP BY ticket_id, name;
+WHERE price = (
+    SELECT MIN(price)
+    FROM tickets
+);
 
-SELECT MAX(end_date), hotel_id, name
+SELECT hotel_id, name, MAX(end_date)
 FROM trips
 GROUP BY hotel_id, name;
 
-SELECT SUM(capacity) hotel_id, contact_no
+SELECT hotel_id, SUM(capacity)
 FROM hotels
-GROUP BY hotel_id, contact_no;
+GROUP BY hotel_id;
 
-SELECT AVG(price) ticket_id, name
-FROM tickets
-GROUP BY ticket_id, name;
+SELECT f.name, AVG(f.entry_price)                           -- This part is not finished, I want to discuss this with the group first -Junyo
+FROM hotels h, TABLE(h.facilities) f
+GROUP BY f.name;
+
+SELECT AVG(f.entry_price) AS avg_entry_fee
+FROM hotels h, TABLE(h.facilities) f;
 
 -- LIKE, IN, OR, BETWEEN, ANY, SOME AND ALL
 
@@ -520,15 +516,12 @@ LEFT JOIN travellers tr
 
 -- SUB-QUERIES : Find the information of Travellers who have a Student Ticket
 
-COLUMN firstname FORMAT a15;
-COLUMN surname FORMAT a7;
-
 SELECT tr.traveller_id, tr.firstname, tr.surname
 FROM travellers tr
 WHERE (tr.traveller_id) IN (
-    SELECT ti.traveller_id
+    SELECT ti.traveller_id, ti.name
     FROM tickets ti
-    WHERE name = 'STUDENT'
+    WHERE name = 'STUDENTS'
 );
 
 /*
@@ -536,4 +529,13 @@ NOTES
 
 EXCEPTION HANDLING
 
+Things we gotta fix / do
+
+fix nats aggregate functions
+start on pl/sql (procedures, functions, triggers, and cursors [bulk binding too with cursors])
+switch statements
+const packages stuff
+check out comments that we have issues with
+
 */
+
