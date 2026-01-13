@@ -190,14 +190,19 @@ VALUES (100004, 'WARREN', 'BROWNE', '24-APR-2003', address_type('4 SILENT ROAD',
 INSERT INTO travellers
 VALUES (100005, 'HUGO', 'VEIL', '06-JAN-1800', address_type('13 SERRIN LAND', 'UTOPIA', 'SERITH'));
 
--- TRIP CATEGORIES
+INSERT INTO travellers -- CHILD INSERT
+VALUES (100006, 'DABABY', 'CONVERTIBLE', '13-JAN-2021', address_type('420 BLAZIT ROAD', 'SIGMA NATION', 'AMERICA'));
+
+-- TRIP CATEGORIES (JUNYO WIP)
+
+ALTER SESSION SET NLS_DATE_FORMAT = 'DD/MON';
 
 INSERT INTO trip_categories
 VALUES (
     200001,
     duration_varray_type(
-        '12-DEC-2000',
-        '31-DEC-2000'
+        '12/DEC',
+        '31/DEC'
     ),
     10,
     'CHRISTMAS',
@@ -208,8 +213,8 @@ INSERT INTO trip_categories
 VALUES (
     200002,
     duration_varray_type(
-        '01-JAN-2000',
-        '10-JAN-2000'
+        '01/JAN',
+        '10/JAN'
     ),
     12,
     'NEW YEAR',
@@ -220,8 +225,8 @@ INSERT INTO trip_categories
 VALUES (
     200003,
     duration_varray_type(
-        '14-FEB-2000',
-        '20-FEB-2000'
+        '14/FEB',
+        '20/FEB'
     ),
     18,
     'VALENTINE',
@@ -232,8 +237,8 @@ INSERT INTO trip_categories
 VALUES (
     200004,
     duration_varray_type(
-        '01-APR-2000',
-        '05-APR-2000'
+        '01/APR',
+        '05/APR'
     ),
     10,
     'SPRING',
@@ -244,13 +249,15 @@ INSERT INTO trip_categories
 VALUES (
     200005,
     duration_varray_type(
-        '15-JUL-2000',
-        '25-JUL-2000'
+        '15/JUL',
+        '25/JUL'
     ),
     15,
     'SUMMER',
     'BEACH ACTIVITIES LIKE SWIMMING, VOLLEYBALL, AND BOAT RIDES'
 );
+
+ALTER SESSION SET NLS_DATE_FORMAT = 'DD/MON/YYYY';
 
 -- ADDRESS OBJECT INSERTS
 
@@ -316,7 +323,7 @@ facilities_varray_type(
     facilities_type('SPA', 'ACCESS TO A NICE SPA WITH YOUR SIGNIFICANT OTHER', 120, '12:00','21:30', 0.00)), 
     REF(a) FROM addresses a WHERE street='67 ST. MICHAELS ROAD';
 
-ALTER SESSION SET NLS_DATE_FORMAT = 'DD-MON-YYYY';
+ALTER SESSION SET NLS_DATE_FORMAT = 'DD/MON/YYYY';
 
 -- TRIPS
 
@@ -337,7 +344,7 @@ VALUES (400002, 200002, 300002, 'CITY EXPLORER WEEKEND',
     activity_table_type(
         activity_type('HISTORIC MUSEUM TOUR', 'GUIDED WALK THROUGH MAJOR HISTORICAL MUSEUM HIGHLIGHTS', 5, 2, 30, 'CULTURAL'),
         activity_type('STREET FOOD WALK', 'VISIT SEVERAL POPULAR FOOD STALLS AND LEARN ABOUT LOCAL CUISINE', 7, 2, 20, 'CULINARY'),
-        activity_type('RIVER CRUISE', 'CALM SIGHTSEEING CRUISE ALONG THE CITY''S RIVER', 1, 1, 50, 'LEISURE'))
+        activity_type('RIVER CRUISE', 'CALM SIGHTSEEING CRUISE ALONG THE CITY''S RIVER', 1, 1, 50, 'LEISURE'))                              -- check if the ' work or not
 );
 
 INSERT INTO trips
@@ -387,6 +394,10 @@ VALUES (500004, 400002, 100004, 'FESTIVAL AND CULTURE TOUR', 250.00, 'DISABLED')
 INSERT INTO tickets (ticket_id, trip_id, traveller_id, name, price, description)
 VALUES (500005, 400002, 100005, 'ISLAND RESORT RETREAT', 0.00, 'CARER');
 
+-- TRIGGER SHOULD NOT ALLOW THIS TO WORK, TRAVELLER IS TOO YOUNG FOR THIS TICKET
+INSERT INTO tickets (ticket_id, trip_id, traveller_id, name, price, description)
+VALUES (500006, 400004, 100006, 'BOAT RIDE INTO SIGMA NATION', 500.00, 'ADULT');
+
 -- -- QUERIES
 
 -- SIMPLE QUERY
@@ -413,13 +424,10 @@ FROM travellers t;
 -- VARRAY
 COLUMN hotel_name FORMAT a15;
 COLUMN facility_name FORMAT a15;
-ALTER SESSION SET NLS_DATE_FORMAT = "HH24:MI";
 
 SELECT hotel_id, h.name hotel_name, f.name facility_name, f.opening_time, f.closing_time, f.entry_price
 FROM hotels h, TABLE(h.facilities) f
 WHERE hotel_id = 300005;
-
-ALTER SESSION SET NLS_DATE_FORMAT = 'DD-MON-YYYY';
 
 -- QUERYING TABLES WITH NESTED TABLES
 COLUMN trip_name FORMAT a11;
@@ -437,17 +445,14 @@ FROM trips t
 WHERE t.trip_id = 400001) a;
 
 -- QUERYING VARRAY USING ALIAS AND AGGREGATE FUNCTION (Querying Simple VArray)
-COLUMN name FORMAT a15;
-COLUMN duration FORMAT a46;
-ALTER SESSION SET NLS_DATE_FORMAT = 'DD/MON';
-
-SELECT tc.trip_category_id, tc.name, tc.minimum_age,
+SELECT tc.trip_category_id,
+       tc.name,
+       tc.minimum_age,
        MIN(d.COLUMN_VALUE) AS start_date,
        MAX(d.COLUMN_VALUE) AS end_date
-FROM trip_categories tc, TABLE(tc.duration) d
+FROM trip_categories tc
+CROSS JOIN TABLE(tc.duration) d
 GROUP BY tc.trip_category_id, tc.name, tc.minimum_age;
-
-ALTER SESSION SET NLS_DATE_FORMAT = 'DD-MON-YYYY';
 
 -- UNION, INTERSECT, MINUS
 
@@ -540,6 +545,8 @@ WHERE (tr.traveller_id) IN (
 
 -- -- PL/SQL
 
+-- Procedures, Functions, Loops, Cursors, Switch Statements
+
 DECLARE
 vn_counter NUMBER(3) := 1;
 vc_firstname := 'WARREN';
@@ -587,7 +594,7 @@ BEGIN
     FOR rec_cur_tickets IN cur_tickets LOOP
     CASE
         WHEN INSTR(UPPER(rec_cur_tickets.description), 'ADULT') = 1 THEN
-            DBMS_OUTPUT.PUT_LINE('No discount since ADULT ticket');
+            DBMS_OUTPUT.PUT_LINE('NO DISCOUNT SNNCE ADULT TICKET');
         WHEN INSTR(UPPER(rec_cur_tickets.description), 'CHILD') = 1 THEN
             UPDATE tickets SET price = price * 0.7 WHERE ticket_id = rec_cur_tickets.ticket_id;
         WHEN INSTR(UPPER(rec_cur_tickets.description), 'CARER') = 1 THEN
@@ -597,11 +604,55 @@ BEGIN
         WHEN INSTR(UPPER(rec_cur_tickets.description), 'ELDERLY') = 1 THEN
             UPDATE tickets SET price = price * 0.8 WHERE ticket_id = rec_cur_tickets.ticket_id;
         ELSE
-            DBMS_OUTPUT.PUT_LINE('Unknown ticket type!');
+            DBMS_OUTPUT.PUT_LINE('UNKNOWN TICKET TYPE!');
     END CASE;
     END LOOP;
 END proc_update_age_price;
 /
+
+-- Triggers
+
+CREATE OR REPLACE TRIGGER trig_dob_ck
+BEFORE INSERT OR UPDATE OF traveller_id, trip_id ON tickets
+FOR EACH ROW
+
+DECLARE
+
+    vn_traveller_age  NUMBER(3);
+    vn_minimum_age    trip_categories.minimum_age%TYPE;
+    vd_dob            travellers.dob%TYPE;
+
+BEGIN
+
+    IF :NEW.traveller_id IS NULL OR :NEW.trip_id IS NULL THEN
+        RETURN;
+    END IF;
+
+    SELECT tc.minimum_age
+    INTO vn_minimum_age
+    FROM trips tri
+    JOIN trip_categories tc
+      ON tc.trip_category_id = tri.trip_category_id
+    WHERE tri.trip_id = :NEW.trip_id;
+
+    SELECT tra.dob
+    INTO vd_dob
+    FROM travellers tra
+    WHERE tra.traveller_id = :NEW.traveller_id;
+
+    vn_traveller_age := FLOOR(MONTHS_BETWEEN(SYSDATE, vd_dob) / 12);
+
+    IF vn_traveller_age < vn_minimum_age THEN
+        RAISE_APPLICATION_ERROR(
+            -20000,
+            'ERROR - TRAVELLER NOT OLD ENOUGH. AGE: ' || vn_traveller_age ||
+            '. MINIMUM AGE: ' || vn_minimum_age
+        );
+    END IF;
+
+END trig_dob_ck;
+/
+
 
 /*
 NOTES
