@@ -345,7 +345,7 @@ VALUES (400002, 200002, 300002, 'CITY EXPLORER WEEKEND',
     activity_table_type(
         activity_type('HISTORIC MUSEUM TOUR', 'GUIDED WALK THROUGH MAJOR HISTORICAL MUSEUM HIGHLIGHTS', 5, 2, 30, 'CULTURAL'),
         activity_type('STREET FOOD WALK', 'VISIT SEVERAL POPULAR FOOD STALLS AND LEARN ABOUT LOCAL CUISINE', 7, 2, 20, 'CULINARY'),
-        activity_type('RIVER CRUISE', 'CALM SIGHTSEEING CRUISE ALONG THE CITY''S RIVER', 1, 1, 50, 'LEISURE'))                              -- check if the ' work or not
+        activity_type('RIVER CRUISE', 'CALM SIGHTSEEING CRUISE ALONG THE CITY''S RIVER', 1, 1, 50, 'LEISURE'))
 );
 
 INSERT INTO trips
@@ -431,7 +431,7 @@ COLUMN trip_name FORMAT a11;
 COLUMN activity_name FORMAT a16;
 COLUMN genre FORMAT a13;
 
-SELECT trip_id, t.name trip_name, a.name activity_name, a.activity_count, a.duration D_HOURS, a.genre       -- (yam comment): removed 1 column cuz it had the same info (plus it contradicted and would look bad cuz of inconsistencies :sob:)
+SELECT trip_id, t.name trip_name, a.name activity_name, a.activity_count, a.duration D_HOURS, a.genre
 FROM trips t, TABLE(t.activities) a;
 
 -- QUERYING NESTED TABLES ONLY
@@ -451,6 +451,22 @@ FROM trip_categories tc
 CROSS JOIN TABLE(tc.duration) d
 GROUP BY tc.trip_category_id, tc.name, tc.minimum_age;
 
+-- OBJECT REFERENCE AND VARRAY
+
+COLUMN hotel_id a8;
+COLUMN name FORMAT a8;
+COLUMN street FORMAT a15;
+COLUMN city FORMAT a7;
+COLUMN country FORMAT a7;
+COLUMN facility_name FORMAT a15;
+ALTER SESSION SET NLS_DATE_FORMAT = "HH24:MI";
+
+SELECT hotel_id, h.name, f.name facility_name, f.opening_time, f.closing_time, h.addresses.street street, h.addresses.city city, h.addresses.country country
+FROM hotels h, TABLE(h.facilities) f
+WHERE hotel_id = 300005;
+
+ALTER SESSION SET NLS_DATE_FORMAT = 'DD-MON-YYYY';
+
 -- UNION, INTERSECT, MINUS
 
 SELECT traveller_id, firstname, surname FROM travellers WHERE dob > '31-MAY-2005'
@@ -469,7 +485,8 @@ SELECT traveller_id, firstname, surname FROM travellers WHERE dob > '31-MAY-2003
 
 -- This show the amount of travellers
 SELECT COUNT(traveller_id)
-FROM travellers;
+FROM travellers
+WHERE dob BETWEEN '31-MAY-2003' AND '31-MAY-2010';
 
 -- This show the ticket with the lowest price
 SELECT name, price
@@ -495,7 +512,6 @@ FROM hotels;
 SELECT AVG(f.entry_price)
 FROM hotels h, TABLE(h.facilities) f;
 
-
 -- LIKE, IN, OR, BETWEEN, ANY, SOME AND ALL
 
 SELECT traveller_id, firstname, surname FROM travellers WHERE surname LIKE 'I%';
@@ -519,6 +535,7 @@ SELECT tr.traveller_id, tr.firstname, ti.name TICKET_NAME, ti.price
 FROM travellers tr
 INNER JOIN tickets ti
     ON tr.traveller_id = ti.traveller_id
+WHERE ti.price BETWEEN 100 AND 400
 ORDER BY ti.price;
 
 -- OUTER JOINS : Listing all the Travellers with their respective Ticket Names and Prices 
@@ -532,12 +549,14 @@ LEFT JOIN travellers tr
 
 -- SUB-QUERIES : Find the information of Travellers who have a Student Ticket (NEEDS CHANGING SINCE TICKETS NAME IS NOW IN DESCRIPTION, NEW TICKET NAMES ARE DIFFERENT)
 
+COLUMN description FORMAT a15;
+
 SELECT tr.traveller_id, tr.firstname, tr.surname
 FROM travellers tr
 WHERE (tr.traveller_id) IN (
-    SELECT ti.traveller_id, ti.description -- Check
+    SELECT ti.traveller_id
     FROM tickets ti
-    WHERE description = 'STUDENT' -- Check
+    WHERE ti.description = 'STUDENT'
 );
 
 -- -- PL/SQL
