@@ -1,5 +1,13 @@
 SET SERVEROUTPUT ON
 
+-- DROPPING PL / SQL
+
+DROP TRIGGER trig_dob_ck;
+
+DROP FUNCTION func_calculate_age;
+
+DROP PROCEDURE proc_update_age_price;
+
 -- -- DROP ALL TABLES / OBJECTS / TYPES
 
 -- RELATIONAL TABLES
@@ -190,10 +198,6 @@ VALUES (100004, 'WARREN', 'BROWNE', '24-APR-2003', address_type('4 SILENT ROAD',
 INSERT INTO travellers
 VALUES (100005, 'HUGO', 'VEIL', '06-JAN-1800', address_type('13 SERRIN LAND', 'UTOPIA', 'SERITH'));
 
-INSERT INTO travellers -- CHILD INSERT
-VALUES (100006, 'DABABY', 'CONVERTIBLE', '13-JAN-2021', address_type('420 BLAZIT ROAD', 'SIGMA NATION', 'AMERICA'));
-
--- No More reverting back in trip catagories, plz...
 -- TRIP CATEGORIES
 
 INSERT INTO trip_categories
@@ -391,10 +395,6 @@ VALUES (500004, 400002, 100004, 'FESTIVAL AND CULTURE TOUR', 250.00, 'DISABLED')
 INSERT INTO tickets (ticket_id, trip_id, traveller_id, name, price, description)
 VALUES (500005, 400002, 100005, 'ISLAND RESORT RETREAT', 0.00, 'CARER');
 
--- TRIGGER SHOULD NOT ALLOW THIS TO WORK, TRAVELLER IS TOO YOUNG FOR THIS TICKET
-INSERT INTO tickets (ticket_id, trip_id, traveller_id, name, price, description)
-VALUES (500006, 400004, 100006, 'BOAT RIDE INTO SIGMA NATION', 500.00, 'ADULT');
-
 -- -- QUERIES
 
 -- SIMPLE QUERY
@@ -465,7 +465,7 @@ SELECT traveller_id, firstname, surname FROM travellers WHERE dob > '31-MAY-2005
 MINUS
 SELECT traveller_id, firstname, surname FROM travellers WHERE dob > '31-MAY-2003';
 
--- AGGREGATE FUNCTIONS  -- double check yam
+-- AGGREGATE FUNCTIONS
 
 -- This show the amount of travellers
 SELECT COUNT(traveller_id)
@@ -576,35 +576,41 @@ BEGIN
 END;
 /
 
-CREATE OR REPLACE FUNCTION func_calculate_Age(in_date_of_birth DATE)
-RETURN NUMBER IS
-BEGIN
-    return FLOOR(MONTHS_BETWEEN(sysdate, in_date_of_birth)/12);
-END func_calculate_Age;
-/
+SELECT ticket_id, price, description FROM tickets;
 
-CREATE OR REPLACE PROCEDURE proc_update_age_price() IS
+CREATE OR REPLACE PROCEDURE proc_update_age_price IS
     CURSOR cur_tickets IS
     SELECT ticket_id, description
     FROM tickets;
 BEGIN
     FOR rec_cur_tickets IN cur_tickets LOOP
     CASE
-        WHEN INSTR(UPPER(rec_cur_tickets.description), 'ADULT') = 1 THEN
-            DBMS_OUTPUT.PUT_LINE('NO DISCOUNT SNNCE ADULT TICKET');
-        WHEN INSTR(UPPER(rec_cur_tickets.description), 'CHILD') = 1 THEN
-            UPDATE tickets SET price = price * 0.7 WHERE ticket_id = rec_cur_tickets.ticket_id;
-        WHEN INSTR(UPPER(rec_cur_tickets.description), 'CARER') = 1 THEN
+        WHEN INSTR(UPPER(rec_cur_tickets.description), 'CARER') > 0 THEN
             UPDATE tickets SET price = 0 WHERE ticket_id = rec_cur_tickets.ticket_id;
-        WHEN INSTR(UPPER(rec_cur_tickets.description), 'STUDENT') = 1 THEN
+        WHEN INSTR(UPPER(rec_cur_tickets.description), 'DISABLED') > 0 THEN
+            UPDATE tickets SET price = price * 0.7 WHERE ticket_id = rec_cur_tickets.ticket_id;
+        WHEN INSTR(UPPER(rec_cur_tickets.description), 'CHILD') > 0 THEN
+            UPDATE tickets SET price = price * 0.7 WHERE ticket_id = rec_cur_tickets.ticket_id;
+        WHEN INSTR(UPPER(rec_cur_tickets.description), 'STUDENT') > 0 THEN
             UPDATE tickets SET price = price * 0.8 WHERE ticket_id = rec_cur_tickets.ticket_id;
-        WHEN INSTR(UPPER(rec_cur_tickets.description), 'ELDERLY') = 1 THEN
+        WHEN INSTR(UPPER(rec_cur_tickets.description), 'ELDERLY') > 0 THEN
             UPDATE tickets SET price = price * 0.8 WHERE ticket_id = rec_cur_tickets.ticket_id;
+        WHEN INSTR(UPPER(rec_cur_tickets.description), 'ADULT') > 0 THEN
+            DBMS_OUTPUT.PUT_LINE('TICKET ID ' || rec_cur_tickets.ticket_id || ' | NO DISCOUNT SINCE ADULT TICKET');
         ELSE
             DBMS_OUTPUT.PUT_LINE('UNKNOWN TICKET TYPE!');
     END CASE;
     END LOOP;
 END proc_update_age_price;
+/
+
+-- Function
+
+CREATE OR REPLACE FUNCTION func_calculate_age(in_date_of_birth DATE)
+RETURN NUMBER IS
+BEGIN
+    return FLOOR(MONTHS_BETWEEN(sysdate, in_date_of_birth)/12);
+END func_calculate_age;
 /
 
 -- Triggers
@@ -637,7 +643,7 @@ BEGIN
     FROM travellers tra
     WHERE tra.traveller_id = :NEW.traveller_id;
 
-    vn_traveller_age := FLOOR(MONTHS_BETWEEN(SYSDATE, vd_dob) / 12);
+    vn_traveller_age := func_calculate_age(vd_dob);
 
     IF vn_traveller_age < vn_minimum_age THEN
         RAISE_APPLICATION_ERROR(
@@ -650,35 +656,32 @@ BEGIN
 END trig_dob_ck;
 /
 
+-- Testing Trigger Queries
 
-/*
-NOTES
+SELECT tc.minimum_age
+FROM trips tri
+JOIN trip_categories tc
+    ON tc.trip_category_id = tri.trip_category_id
+WHERE tri.trip_id = 400004;
 
-EXCEPTION HANDLING
+SELECT tra.dob
+FROM travellers tra
+WHERE tra.traveller_id = 100006;
 
-Things we gotta fix / do
+-- TEST INSERTS
 
-TDLR:
-@everyone
+INSERT INTO travellers -- CHILD INSERT
+VALUES (100006, 'DABABY', 'CONVERTIBLE', '13-JAN-2021', address_type('420 BLAZIT ROAD', 'SIGMA NATION', 'AMERICA'));
 
-- optional : exception handling (way later down the line)
+INSERT INTO travellers -- ADULT INSERT
+VALUES (100007, 'ETHAN', 'WINTERS', '01-JAN-2000', address_type('100 FIRST STREET', 'FIRST CITY', 'ENGLAND'));
 
-- get pl sql done:
+-- TRIGGER SHOULD NOT ALLOW THIS TO WORK, TRAVELLER IS TOO YOUNG FOR THIS TICKET
 
-- Warren also doing switch cases and loops (he basically doing):
-    - proceudres (Warren)
-    - functions (Warren)
-    - cursors (Warren)
+INSERT INTO tickets (ticket_id, trip_id, traveller_id, name, price, description)
+VALUES (500006, 400004, 100006, 'BOAT RIDE INTO SIGMA NATION', 500.00, 'ADULT');
 
-Yam:
-- doing checks
-- still do the testing table shenanigans once pl sql is sorted
+-- TRIGGER SHOULD WORK, TRAVELLER IS OLD ENOUGH FOR THIS TICKET
 
-Junyo:
-- fixing dates n stuff
-
-Nat:
-- do a procedure that has a trigger involved with it
-
-*/
-
+INSERT INTO tickets (ticket_id, trip_id, traveller_id, name, price, description)
+VALUES (500008, 400004, 100007, 'BOAT RIDE INTO SIGMA NATION', 500.00, 'ADULT');
