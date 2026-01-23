@@ -236,6 +236,8 @@ BEGIN
     CASE
         WHEN INSTR(UPPER(rec_cur_tickets.description), 'CARER') > 0 THEN
             UPDATE tickets SET price = 0 WHERE ticket_id = rec_cur_tickets.ticket_id;
+        WHEN INSTR(UPPER(rec_cur_tickets.description), 'DISABLED') > 0 THEN
+            UPDATE tickets SET price = price * 0.7 WHERE ticket_id = rec_cur_tickets.ticket_id;
         WHEN INSTR(UPPER(rec_cur_tickets.description), 'CHILD') > 0 THEN
             UPDATE tickets SET price = price * 0.7 WHERE ticket_id = rec_cur_tickets.ticket_id;
         WHEN INSTR(UPPER(rec_cur_tickets.description), 'STUDENT') > 0 THEN
