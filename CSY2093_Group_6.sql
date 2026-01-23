@@ -193,16 +193,15 @@ VALUES (100005, 'HUGO', 'VEIL', '06-JAN-1800', address_type('13 SERRIN LAND', 'U
 INSERT INTO travellers -- CHILD INSERT
 VALUES (100006, 'DABABY', 'CONVERTIBLE', '13-JAN-2021', address_type('420 BLAZIT ROAD', 'SIGMA NATION', 'AMERICA'));
 
--- TRIP CATEGORIES (JUNYO WIP)
-
-ALTER SESSION SET NLS_DATE_FORMAT = 'DD/MON';
+-- No More reverting back in trip catagories, plz...
+-- TRIP CATEGORIES
 
 INSERT INTO trip_categories
 VALUES (
     200001,
     duration_varray_type(
-        '12/DEC',
-        '31/DEC'
+        '12-DEC-2000',
+        '31-DEC-2000'
     ),
     10,
     'CHRISTMAS',
@@ -213,8 +212,8 @@ INSERT INTO trip_categories
 VALUES (
     200002,
     duration_varray_type(
-        '01/JAN',
-        '10/JAN'
+        '01-JAN-2000',
+        '10-JAN-2000'
     ),
     12,
     'NEW YEAR',
@@ -225,8 +224,8 @@ INSERT INTO trip_categories
 VALUES (
     200003,
     duration_varray_type(
-        '14/FEB',
-        '20/FEB'
+        '14-FEB-2000',
+        '20-FEB-2000'
     ),
     18,
     'VALENTINE',
@@ -237,8 +236,8 @@ INSERT INTO trip_categories
 VALUES (
     200004,
     duration_varray_type(
-        '01/APR',
-        '05/APR'
+        '01-APR-2000',
+        '05-APR-2000'
     ),
     10,
     'SPRING',
@@ -249,15 +248,13 @@ INSERT INTO trip_categories
 VALUES (
     200005,
     duration_varray_type(
-        '15/JUL',
-        '25/JUL'
+        '15-JUL-2000',
+        '25-JUL-2000'
     ),
     15,
     'SUMMER',
     'BEACH ACTIVITIES LIKE SWIMMING, VOLLEYBALL, AND BOAT RIDES'
 );
-
-ALTER SESSION SET NLS_DATE_FORMAT = 'DD/MON/YYYY';
 
 -- ADDRESS OBJECT INSERTS
 
@@ -323,7 +320,7 @@ facilities_varray_type(
     facilities_type('SPA', 'ACCESS TO A NICE SPA WITH YOUR SIGNIFICANT OTHER', 120, '12:00','21:30', 0.00)), 
     REF(a) FROM addresses a WHERE street='67 ST. MICHAELS ROAD';
 
-ALTER SESSION SET NLS_DATE_FORMAT = 'DD/MON/YYYY';
+ALTER SESSION SET NLS_DATE_FORMAT = 'DD-MON-YYYY';
 
 -- TRIPS
 
