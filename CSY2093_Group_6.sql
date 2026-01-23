@@ -227,7 +227,8 @@ BEGIN
 END func_calculate_Age;
 /
 
-CREATE OR REPLACE PROCEDURE proc_update_age_price() IS
+SELECT ticket_id, price, description FROM tickets;
+CREATE OR REPLACE PROCEDURE proc_update_age_price IS
     CURSOR cur_tickets IS
     SELECT ticket_id, description
     FROM tickets;
