@@ -612,6 +612,8 @@ BEGIN
 END proc_update_age_price;
 /
 
+EXEC proc_update_age_price;
+
 -- Function
 
 CREATE OR REPLACE FUNCTION func_calculate_age(in_date_of_birth DATE)
