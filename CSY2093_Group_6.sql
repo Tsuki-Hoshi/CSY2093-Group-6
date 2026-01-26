@@ -397,61 +397,7 @@ VALUES (500005, 400002, 100005, 'ISLAND RESORT RETREAT', 0.00, 'CARER');
 
 -- -- QUERIES
 
--- SIMPLE QUERY
-SELECT trip_category_id, name, minimum_age
-FROM trip_categories;
-
--- OBJECT REFERENCED IN TABLES
-COLUMN name FORMAT a18;
-COLUMN street FORMAT a15;
-COLUMN city FORMAT a15;
-COLUMN country FORMAT a15;
-
-SELECT hotel_id, h.name, h.addresses.street street, h.addresses.city city, h.addresses.country country
-FROM hotels h;
-
--- OBJECT TYPE IN COLUMNS
-COLUMN firstname FORMAT a15;
-COLUMN city FORMAT a15;
-COLUMN country FORMAT a15;
-
-SELECT t.traveller_id, t.firstname, t.address.city CITY, t.address.country COUNTRY
-FROM travellers t;
-
--- VARRAY
-COLUMN hotel_name FORMAT a15;
-COLUMN facility_name FORMAT a15;
-
-SELECT hotel_id, h.name hotel_name, f.name facility_name, f.opening_time, f.closing_time, f.entry_price
-FROM hotels h, TABLE(h.facilities) f
-WHERE hotel_id = 300005;
-
--- QUERYING TABLES WITH NESTED TABLES
-COLUMN trip_name FORMAT a11;
-COLUMN activity_name FORMAT a16;
-COLUMN genre FORMAT a13;
-
-SELECT trip_id, t.name trip_name, a.name activity_name, a.activity_count, a.duration D_HOURS, a.genre
-FROM trips t, TABLE(t.activities) a;
-
--- QUERYING NESTED TABLES ONLY
-SELECT VALUE(a)
-FROM THE(
-SELECT t.activities
-FROM trips t
-WHERE t.trip_id = 400001) a;
-
--- QUERYING VARRAY USING ALIAS AND AGGREGATE FUNCTION (Querying Simple VArray)
-SELECT tc.trip_category_id,
-       tc.name,
-       tc.minimum_age,
-       MIN(d.COLUMN_VALUE) AS start_date,
-       MAX(d.COLUMN_VALUE) AS end_date
-FROM trip_categories tc
-CROSS JOIN TABLE(tc.duration) d
-GROUP BY tc.trip_category_id, tc.name, tc.minimum_age;
-
--- OBJECT REFERENCE AND VARRAY
+-- OBJECT REFERENCED IN TABLES, VARRAY
 
 COLUMN hotel_id a8;
 COLUMN name FORMAT a8;
@@ -467,18 +413,89 @@ WHERE hotel_id = 300005;
 
 ALTER SESSION SET NLS_DATE_FORMAT = 'DD-MON-YYYY';
 
--- UNION, INTERSECT, MINUS
+-- Fetch information about hotel with id of 300005 and it's facility name and opening and closing time
+
+-- OBJECT TYPE IN COLUMNS, MINUS
+
+COLUMN firstname FORMAT a15;
+COLUMN trip FORMAT a14;
+COLUMN city FORMAT a15;
+COLUMN country FORMAT a15;
+
+SELECT tr.traveller_id, tr.firstname, tp.name TRIP, tr.address.city CITY, tr.address.country COUNTRY
+FROM travellers tr
+JOIN tickets tk
+ON tr.traveller_id = tk.traveller_id
+JOIN trips tp
+ON tk.trip_id = tp.trip_id
+MINUS
+SELECT tr.traveller_id, tr.firstname, tp.name TRIP, tr.address.city CITY, tr.address.country COUNTRY
+FROM travellers tr
+JOIN tickets tk
+ON tr.traveller_id = tk.traveller_id
+JOIN trips tp
+ON tk.trip_id = tp.trip_id
+WHERE tr.dob > '31-MAY-2005';
+
+-- Fetch information about a person and which trip have they book for? and remove anyone who's younger than 31-MAY-2005
+
+-- QUERYING TABLES WITH NESTED TABLES, INTERSECT
+COLUMN trip_name FORMAT a11;
+COLUMN activity_name FORMAT a16;
+COLUMN count FORMAT 99;
+COLUMN D_HOURS FORMAT 99;
+COLUMN genre FORMAT a13;
+
+SELECT trip_id, t.name trip_name, a.name activity_name, a.activity_count count, a.duration D_HOURS, a.genre
+FROM trips t, TABLE(t.activities) a
+WHERE a.genre = 'ARTISTIC'
+INTERSECT
+SELECT trip_id, t.name trip_name, a.name activity_name, a.activity_count count, a.duration D_HOURS, a.genre
+FROM trips t, TABLE(t.activities) a
+WHERE a.activity_count > 3;
+
+-- Fetch information about a trip in Artistic genre and have more than 3 activities
+
+-- QUERYING VARRAY USING ALIAS AND AGGREGATE FUNCTION (Querying Simple VArray)
+COLUMN name FORMAT a15;
+COLUMN duration FORMAT a46;
+ALTER SESSION SET NLS_DATE_FORMAT = 'DD/MON';
+
+SELECT tc.trip_category_id, tc.name, tc.minimum_age,
+       MIN(d.COLUMN_VALUE) AS start_date,
+       MAX(d.COLUMN_VALUE) AS end_date
+FROM trip_categories tc, TABLE(tc.duration) d
+GROUP BY tc.trip_category_id, tc.name, tc.minimum_age;
+
+ALTER SESSION SET NLS_DATE_FORMAT = 'DD-MON-YYYY';
+
+-- AGGREGATE FUNCTIONS, SUB QUERY, OUTTER JOIN
+COLUMN surname FORMAT a9;
+
+SELECT tr.traveller_id, tr.firstname, tr.surname, ti.ticket_id, ti.name, ti.price
+FROM travellers tr
+LEFT JOIN tickets ti
+ON tr.traveller_id = ti.traveller_id
+AND ti.price < (
+    SELECT AVG(price)
+    FROM tickets
+)
+WHERE tr.address.country IN ('UK', 'BANGLADESH', 'ETHIOPIA');
+
+-- Fetch travellers from UK BANGLADESH and ETHIOPIA, and their ticket that have a price lower than the overall price, ticket with no price will still show but as NULL
+
+
+-- QUERYING NESTED TABLES ONLY
+SELECT VALUE(a)
+FROM THE(
+SELECT t.activities
+FROM trips t
+WHERE t.trip_id = 400001) a;
+
+-- UNION
 
 SELECT traveller_id, firstname, surname FROM travellers WHERE dob > '31-MAY-2005'
 UNION
-SELECT traveller_id, firstname, surname FROM travellers WHERE dob > '31-MAY-2003';
-
-SELECT traveller_id, firstname, surname FROM travellers WHERE dob > '31-MAY-2005'
-INTERSECT
-SELECT traveller_id, firstname, surname FROM travellers WHERE dob > '31-MAY-2003';
-
-SELECT traveller_id, firstname, surname FROM travellers WHERE dob > '31-MAY-2005'
-MINUS
 SELECT traveller_id, firstname, surname FROM travellers WHERE dob > '31-MAY-2003';
 
 -- AGGREGATE FUNCTIONS
@@ -508,17 +525,9 @@ WHERE end_date = (
 SELECT SUM(capacity)
 FROM hotels;
 
--- This show the average price of all the facilities
-SELECT AVG(f.entry_price)
-FROM hotels h, TABLE(h.facilities) f;
-
--- LIKE, IN, OR, BETWEEN, ANY, SOME AND ALL
+-- LIKE, OR, BETWEEN, ANY, SOME AND ALL
 
 SELECT traveller_id, firstname, surname FROM travellers WHERE surname LIKE 'I%';
-
-SELECT t.traveller_id, t.firstname, t.surname 
-FROM travellers t 
-WHERE t.address.country IN ('UK', 'BANGLADESH', 'ETHIOPIA');
 
 SELECT hotel_id, name, rating, capacity FROM hotels WHERE capacity BETWEEN 1000 AND 3000;
 
@@ -537,27 +546,6 @@ INNER JOIN tickets ti
     ON tr.traveller_id = ti.traveller_id
 WHERE ti.price BETWEEN 100 AND 400
 ORDER BY ti.price;
-
--- OUTER JOINS : Listing all the Travellers with their respective Ticket Names and Prices 
-
-COLUMN surname FORMAT a20;
-
-SELECT ti.traveller_id, ti.name TICKET_NAME, ti.price, tr.firstname, tr.surname
-FROM tickets ti
-LEFT JOIN travellers tr
-    ON ti.traveller_id = tr.traveller_id;
-
--- SUB-QUERIES : Find the information of Travellers who have a Student Ticket (NEEDS CHANGING SINCE TICKETS NAME IS NOW IN DESCRIPTION, NEW TICKET NAMES ARE DIFFERENT)
-
-COLUMN description FORMAT a15;
-
-SELECT tr.traveller_id, tr.firstname, tr.surname
-FROM travellers tr
-WHERE (tr.traveller_id) IN (
-    SELECT ti.traveller_id
-    FROM tickets ti
-    WHERE ti.description = 'STUDENT'
-);
 
 -- -- PL/SQL
 
