@@ -1,3 +1,4 @@
+
 SET SERVEROUTPUT ON
 
 -- DROPPING PL / SQL
@@ -399,7 +400,7 @@ VALUES (500005, 400002, 100005, 'ISLAND RESORT RETREAT', 0.00, 'CARER');
 
 -- OBJECT REFERENCED IN TABLES, VARRAY
 
-COLUMN hotel_id a8;
+COLUMN hotel_id FORMAT 999999;
 COLUMN name FORMAT a8;
 COLUMN street FORMAT a15;
 COLUMN city FORMAT a7;
@@ -437,7 +438,7 @@ JOIN trips tp
 ON tk.trip_id = tp.trip_id
 WHERE tr.dob > '31-MAY-2005';
 
--- Fetch information about a person and which trip have they book for? and remove anyone who's younger than 31-MAY-2005
+-- Fetch information about a person and which trip have they book for and remove anyone who's younger than 31-MAY-2005
 
 -- QUERYING TABLES WITH NESTED TABLES, INTERSECT
 COLUMN trip_name FORMAT a11;
@@ -476,23 +477,23 @@ SELECT tr.traveller_id, tr.firstname, tr.surname, ti.ticket_id, ti.name, ti.pric
 FROM travellers tr
 LEFT JOIN tickets ti
 ON tr.traveller_id = ti.traveller_id
-AND ti.price < (
+AND ti.price > (
     SELECT AVG(price)
     FROM tickets
 )
 WHERE tr.address.country IN ('UK', 'BANGLADESH', 'ETHIOPIA');
 
--- Fetch travellers from UK BANGLADESH and ETHIOPIA, and their ticket that have a price lower than the overall price, ticket with no price will still show but as NULL
+-- Fetch travellers from UK BANGLADESH and ETHIOPIA, and their ticket that have a price higher than the overall price, ticket with no price will still show but as NULL
 
 
--- QUERYING NESTED TABLES ONLY
+-- QUERYING NESTED TABLES ONLY - selects activities nested table from trips for a specific ID
 SELECT VALUE(a)
 FROM THE(
 SELECT t.activities
 FROM trips t
 WHERE t.trip_id = 400001) a;
 
--- UNION
+-- UNION - retrieves travellers on different dob conditions
 
 SELECT traveller_id, firstname, surname FROM travellers WHERE dob > '31-MAY-2005'
 UNION
@@ -553,7 +554,7 @@ ORDER BY ti.price;
 
 DECLARE
 vn_counter NUMBER(3) := 1;
-vc_firstname := 'WARREN';
+vc_firstname VARCHAR2(6) := 'WARREN';
 vn_length NUMBER(2) := LENGTH(vc_firstname);
 BEGIN
     LOOP
@@ -566,8 +567,8 @@ END;
 
 DECLARE
 vn_counter NUMBER(3) := 1;
-vc_firstname := 'WARREN';
-vc_surname := 'BROWNE';
+vc_firstname VARCHAR2(6) := 'WARREN';
+vc_surname VARCHAR2(6) := 'BROWNE';
 vn_length NUMBER(2) := LENGTH(vc_firstname);
 BEGIN
     vn_length := LENGTH(vc_firstname);
