@@ -1,4 +1,11 @@
 
+-- Group 6 SQL Script File
+
+-- Natnael Sintayehu        - 24805852
+-- Junyo Ishizaka Antarasen - 24801047
+-- Syed Yameen Mahdi        - 24811956
+-- Warren Browne            - 23855548
+
 SET SERVEROUTPUT ON
 
 -- DROPPING PL / SQL
@@ -485,7 +492,6 @@ WHERE tr.address.country IN ('UK', 'BANGLADESH', 'ETHIOPIA');
 
 -- Fetch travellers from UK BANGLADESH and ETHIOPIA, and their ticket that have a price higher than the overall price, ticket with no price will still show but as NULL
 
-
 -- QUERYING NESTED TABLES ONLY - selects activities nested table from trips for a specific ID
 SELECT VALUE(a)
 FROM THE(
@@ -695,3 +701,4 @@ VALUES (500006, 400004, 100006, 'BOAT RIDE INTO SIGMA NATION', 500.00, 'ADULT');
 
 INSERT INTO tickets (ticket_id, trip_id, traveller_id, name, price, description)
 VALUES (500008, 400004, 100007, 'BOAT RIDE INTO SIGMA NATION', 500.00, 'ADULT');
+
